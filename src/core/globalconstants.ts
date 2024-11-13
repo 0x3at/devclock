@@ -33,3 +33,24 @@ export const HEARTBEAT_THRESHOLD: number = 100;
 //* UI Preferences
 export const SHOW_TIMER: boolean = true;
 export const TIMER_ALIGNMENT: StatusBarAlignment = StatusBarAlignment.Left;
+
+
+//* Debug Logging of Global Constants
+console.log('Global Constants Debug Log:', {
+    MILLISECONDS_IN_SECOND,
+    SECONDS_IN_MINUTE,
+    MINUTES_IN_HOUR,
+    DEBUG,
+    START_TIME,
+    APP_RUNTIME,
+    SESSION_ID,
+    APP_NAME,
+    APP_ROOT,
+    MACHINE_ID,
+    CONTEXT,
+    THROTTLE_TIME,
+    SYNC_MODE,
+    HEARTBEAT_THRESHOLD,
+    SHOW_TIMER,
+    TIMER_ALIGNMENT
+});
