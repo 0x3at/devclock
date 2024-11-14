@@ -1,5 +1,5 @@
-import { appName, sessionID } from "../../vsc/utils/data";
-import { Session } from "../types/session";
+import { appName, sessionID } from "../../infrastructure/vsc/utils/data";
+import { Session } from "../../shared/types/session";
 
 export const InitializeSession = (): Session => {
 	return {

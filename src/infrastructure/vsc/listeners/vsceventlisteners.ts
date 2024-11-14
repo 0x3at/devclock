@@ -3,8 +3,8 @@ import {
 	contentHasChanged,
 	fileHasChanged,
 	debugHasChanged
-} from "../../core/heartbeats/callbacks";
-import { throttle } from "../../core/utils/general/throttle";
+} from "../../../domain/heartbeat/actions";
+import { throttle } from "../../../shared/utils/throttle";
 
 export type Listener = {
 	pause: () => void;
@@ -32,7 +32,7 @@ const createListener = <T>(
 };
 
 export const textChanged = () =>
-	createListener(ws.onDidChangeTextDocument, contentHasChanged, 60);
+	createListener(ws.onDidChangeTextDocument, contentHasChanged, 0);
 export const docOpened = () =>
 	createListener(ws.onDidOpenTextDocument, fileHasChanged, 10000);
 export const docClosed = () =>
@@ -44,7 +44,17 @@ export const debugStart = () =>
 export const debugEnd = () =>
 	createListener(debug.onDidTerminateDebugSession, debugHasChanged, 10000);
 
+export const Listeners = () => {
+	return [
+		textChanged(),
+		docOpened(),
+		docClosed(),
+		docSaved(),
+		debugStart(),
+		debugEnd()
+	];
+};
 
-//TODO: Implement this
-// export const configChange = () =>
+	//TODO: Implement this
+	// export const configChange = () =>
 // 	createListener(ws.onDidChangeConfiguration, configHasChanged, 10000);
