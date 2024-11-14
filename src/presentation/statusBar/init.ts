@@ -1,4 +1,4 @@
-import { statusBarTimer} from "./statusbartimer";
+import { statusBarTimer} from "./actions";
 
 export const InitializeGui = () => {
     let statusBar = statusBarTimer();

@@ -1,29 +1,32 @@
-import { CONTEXT } from "./core/globalconstants";
-import { InitializeGui } from "./sideEffects/gui/initialize";
-import {
-	debugEnd,
-	debugStart,
-	docClosed,
-	docOpened,
-	docSaved,
-	textChanged
-} from "./vsc/listeners/vsceventlisteners";
+import { ExtensionContext } from "vscode";
+import { Listeners } from "./infrastructure/vsc/listeners/vsceventlisteners";
+import { InitializeGui as Gui } from "./presentation/statusBar/init";
 
-export const initializeExtension = () => {
-	const LtextChanged = textChanged().disposable;
-	const LdocOpened = docOpened().disposable;
-	const LdocClosed = docClosed().disposable;
-	const LdocSaved = docSaved().disposable;
-	const LdebugStart = debugStart().disposable;
-	const LdebugEnd = debugEnd().disposable;
+export const initializeExtension = (ctx: ExtensionContext) => {
+	const disposableListeners = Listeners().map(
+		(listener) => listener.disposable
+	);
+	disposableListeners.forEach((disposable) =>
+		ctx.subscriptions.push(disposable)
+	);
 
-	//* Non Pure buts its vsc what can you do
-	CONTEXT.getContext()!.subscriptions.push(LtextChanged);
-	CONTEXT.getContext()!.subscriptions.push(LdocOpened);
-	CONTEXT.getContext()!.subscriptions.push(LdocClosed);
-	CONTEXT.getContext()!.subscriptions.push(LdocSaved);
-	CONTEXT.getContext()!.subscriptions.push(LdebugStart);
-	CONTEXT.getContext()!.subscriptions.push(LdebugEnd);
+	const gui = Gui();
+	const statusBar = gui.statusBar.disposable();
+	ctx.subscriptions.push(statusBar);
 
-	const gui = InitializeGui();
+	const loadPreferences = async () => {
+		const preferences = await import("./shared/constants/settings.js");
+		await preferences.AppStorage.globalStorage();
+		return preferences;
+	};
+
+	loadPreferences()
+		.then((preferences) => {
+			console.log("App Details:", preferences.AppDetails);
+			console.log("App Preferences:", preferences.AppPreferences);
+			console.log("App Storage:", preferences.AppStorage);
+		})
+		.catch((error) => {
+			console.error("Error loading preferences:", error);
+		});
 };

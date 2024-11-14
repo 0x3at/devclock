@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { CONTEXT } from "./core/globalconstants";
 import { initializeExtension } from "./initialize";
+import { CONTEXT } from "./infrastructure/vsc/context";
 
 export function activate(ctx: vscode.ExtensionContext) {
 	//* Set Context
@@ -17,9 +17,7 @@ export function activate(ctx: vscode.ExtensionContext) {
 
 	//* Capture Context Reliant Constants
 	if (CONTEXT.getContext() !== null) {
-		import("./vsc/contextconstents.js").then(() => {
-			initializeExtension();
-		});
+		initializeExtension(ctx);
 	}
 }
 

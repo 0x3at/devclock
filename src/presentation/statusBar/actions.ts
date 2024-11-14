@@ -1,11 +1,12 @@
 import { StatusBarItem, window, StatusBarAlignment } from "vscode";
-import { START_TIME } from "../../core/globalconstants";
-import { CurrentTime } from "../../core/utils/intUtils/time";
-import { ToTimeStamp } from "../../core/utils/intUtils/time";
-import { absSubtract } from "../../core/utils/intUtils/maths";
-import { DATASTORE } from "../../core/globalconstants";
-import { TimeStamp } from "../../core/utils/intUtils/time";
-import { IdleStateManager } from "../../core/dataStore/idlestate";
+import { START_TIME } from "../../shared/constants/globalconstants";
+import { CurrentTime } from "../../shared/utils/time";
+import { ToTimeStamp } from "../../shared/utils/time";
+import { absSubtract } from "../../shared/utils/maths";
+import { DATASTORE } from "../../shared/constants/globalconstants";
+import { TimeStamp } from "../../shared/utils/time";
+import { IdleStateManager } from "../../domain/session/idleactions";
+import { TimeConverter } from "../../shared/utils/time";
 // //TODO: Replace alignment with preferences map
 
 export type StatusBarTimer = () => {
@@ -13,7 +14,7 @@ export type StatusBarTimer = () => {
 	start: () => NodeJS.Timeout;
 	tooltip: (text: string) => void;
 	hide: () => void;
-	dispose: () => void;
+	disposable: () => StatusBarItem;
 };
 
 export const statusBarTimer: StatusBarTimer = () => {
@@ -22,6 +23,8 @@ export const statusBarTimer: StatusBarTimer = () => {
 		StatusBarAlignment.Left,
 		100
 	);
+
+	idleStateManager.startIdleTimer();
 
 	const formatTimeDisplay = (timestamp: TimeStamp): string => {
 		const { hours, minutes, seconds } = timestamp;
@@ -33,6 +36,7 @@ export const statusBarTimer: StatusBarTimer = () => {
 		const totalTime = absSubtract(currentTime, START_TIME);
 		const idleTime = idleStateManager.updateIdleTime();
 		const activeTime = Math.max(0, totalTime - idleTime);
+
 
 		const timeDisplay = idleStateManager.getState().isIdle
 			? formatTimeDisplay(ToTimeStamp(idleTime))
@@ -51,7 +55,7 @@ export const statusBarTimer: StatusBarTimer = () => {
 			statusBarItem.tooltip = text;
 		},
 		hide: () => statusBarItem.hide(),
-		dispose: () => statusBarItem.dispose()
+		disposable: () => statusBarItem
 	};
 };
 
