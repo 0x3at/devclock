@@ -1,5 +1,5 @@
-export enum SyncMode{
-    HYBRID,
-    LOCAL,
-    CLOUD
+export enum SyncMode {
+	HYBRID,
+	LOCAL,
+	CLOUD
 }

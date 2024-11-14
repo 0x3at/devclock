@@ -1,25 +1,26 @@
-import * as vscode from 'vscode';
-import {initializeExtension} from './initialize';
-import {CONTEXT,DATASTORE} from './core/globalconstants';
-
+import * as vscode from "vscode";
+import { CONTEXT } from "./core/globalconstants";
+import { initializeExtension } from "./initialize";
 
 export function activate(ctx: vscode.ExtensionContext) {
 	//* Set Context
 	CONTEXT.setContext(ctx);
 
-	const disposable = vscode.commands.registerCommand('devclock.helloWorld', () => {
-		vscode.window.showInformationMessage('Hello World from DevClock!');
-	});
+	const helloWorld = vscode.commands.registerCommand(
+		"devclock.helloWorld",
+		() => {
+			vscode.window.showInformationMessage("Hello World from DevClock!");
+		}
+	);
 
-	ctx.subscriptions.push(disposable);
+	ctx.subscriptions.push(helloWorld);
 
 	//* Capture Context Reliant Constants
 	if (CONTEXT.getContext() !== null) {
-		import('./vsc/contextconstents.js').then(() => {
+		import("./vsc/contextconstents.js").then(() => {
 			initializeExtension();
 		});
 	}
-
 }
 
 export function deactivate() {}
