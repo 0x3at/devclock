@@ -13,12 +13,12 @@ export const APPSECRETS: SecretStorage = CONTEXT.getContext()!.secrets;
 export const GlobalStorage:string = CONTEXT.getContext()!.globalStorageUri.path;
 export const WorkspaceStorage:string|undefined = CONTEXT.getContext()!.storageUri?.path;
 
-//* Debug Logging of Context Constants
-console.log('Context Constants Debug Log:', {
-    APPDIRECTORY,
-    GLOBALSTATEMAP,
-    WORKSPACESTATEMAP,
-    APPSECRETS,
-    GlobalStorage,
-    WorkspaceStorage
-});
+// //* Debug Logging of Context Constants
+// console.log('Context Constants Debug Log:', {
+//     APPDIRECTORY,
+//     GLOBALSTATEMAP,
+//     WORKSPACESTATEMAP,
+//     APPSECRETS,
+//     GlobalStorage,
+//     WorkspaceStorage
+// });

@@ -1,114 +1,50 @@
+import { debug, Disposable, workspace as ws } from "vscode";
 import {
-	workspace as ws,
-	TextDocumentChangeEvent,
-	TextDocument,
-	ConfigurationChangeEvent,
-	DebugSession,
-	debug
-} from "vscode";
+	contentHasChanged,
+	fileHasChanged,
+	debugHasChanged
+} from "../../core/heartbeats/callbacks";
+import { throttle } from "../../core/utils/general/throttle";
 
-export const TextChangeListener = (
-	callback: (e: TextDocumentChangeEvent) => void) => {
-	let disposable = ws.onDidChangeTextDocument(
-		(e: TextDocumentChangeEvent) => {
-			callback(e);
-		}
-	);
-	return {
-		pause: () => disposable.dispose(),
-		resume: () =>
-			(disposable = ws.onDidChangeTextDocument(
-				(e: TextDocumentChangeEvent) => {
-					callback(e);
-				}
-			))
-	};
+export type Listener = {
+	pause: () => void;
+	resume: () => void;
+	disposable: Disposable;
 };
-export const docOpenedListener = (callback: (e: TextDocument) => void) => {
-	let disposable = ws.onDidOpenTextDocument((e: TextDocument) => {
-		callback(e);
-	});
+
+type VSCodeEvent<T> = (callback: (arg: T) => void) => Disposable;
+
+const createListener = <T>(
+	event: VSCodeEvent<T>,
+	callback: (arg: T) => void,
+	throttleTime: number
+): Listener => {
+	const throttledCallback = throttle(callback, throttleTime);
+	let disposable = event(throttledCallback);
+
 	return {
 		pause: () => disposable.dispose(),
-		resume: () =>
-			(disposable = ws.onDidOpenTextDocument((e: TextDocument) => {
-				callback(e);
-			}))
+		resume: () => {
+			disposable = event(callback);
+		},
+		disposable
 	};
 };
 
-export const docClosedListener = (callback: (e: TextDocument) => void) => {
-	let disposable = ws.onDidCloseTextDocument((e: TextDocument) => {
-		callback(e);
-	});
-	return {
-		pause: () => disposable.dispose(),
-		resume: () =>
-			(disposable = ws.onDidCloseTextDocument((e: TextDocument) => {
-				callback(e);
-			}))
-	};
-};
-
-export const docSavedListener = (callback: (e: TextDocument) => void) => {
-	let disposable = ws.onDidSaveTextDocument((e: TextDocument) => {
-		callback(e);
-	});
-	return {
-		pause: () => disposable.dispose(),
-		resume: () =>
-			(disposable = ws.onDidSaveTextDocument((e: TextDocument) => {
-				callback(e);
-			}))
-	};
-};
-
-export const configChangedListener = (
-	callback: (e: ConfigurationChangeEvent) => void
-) => {
-	let disposable = ws.onDidChangeConfiguration(
-		(e: ConfigurationChangeEvent) => {
-			callback(e);
-		}
-	);
-	return {
-		pause: () => disposable.dispose(),
-		resume: () =>
-			(disposable = ws.onDidChangeConfiguration(
-				(e: ConfigurationChangeEvent) => {
-					callback(e);
-				}
-			))
-	};
-};
-
-export const debugSessionStartedListener = (
-	callback: (e: DebugSession) => void
-) => {
-	let disposable = debug.onDidStartDebugSession((e: DebugSession) => {
-		callback(e);
-	});
-	return {
-		pause: () => disposable.dispose(),
-		resume: () =>
-			(disposable = debug.onDidStartDebugSession((e: DebugSession) => {
-				callback(e);
-			}))
-	};
-};
-
-export const debugSessionEndedListener = (
-	callback: (e: DebugSession) => void
-) => {
-	let disposable = debug.onDidTerminateDebugSession((e: DebugSession) => {
-		callback(e);
-	});
-	return {
-		pause: () => disposable.dispose(),
-		resume: () => (disposable = debug.onDidTerminateDebugSession((e: DebugSession) => {
-			callback(e);
-		}))
-	};
-};
+export const textChanged = () =>
+	createListener(ws.onDidChangeTextDocument, contentHasChanged, 60);
+export const docOpened = () =>
+	createListener(ws.onDidOpenTextDocument, fileHasChanged, 10000);
+export const docClosed = () =>
+	createListener(ws.onDidCloseTextDocument, fileHasChanged, 10000);
+export const docSaved = () =>
+	createListener(ws.onDidSaveTextDocument, fileHasChanged, 10000);
+export const debugStart = () =>
+	createListener(debug.onDidStartDebugSession, debugHasChanged, 10000);
+export const debugEnd = () =>
+	createListener(debug.onDidTerminateDebugSession, debugHasChanged, 10000);
 
 
+//TODO: Implement this
+// export const configChange = () =>
+// 	createListener(ws.onDidChangeConfiguration, configHasChanged, 10000);
