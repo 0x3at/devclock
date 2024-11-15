@@ -62,20 +62,14 @@ Object.entries(AppPreferences).forEach(([key, value]) => {
 	}
 });
 
-
-
 export const AppStorage = {
 	globalStorage: ContextConstants().getGlobalDirectory,
-	appSecrets: ContextConstants().getAppSecrets(),
+	appSecrets: ContextConstants().getAppSecrets()
 };
 
-Object.entries(AppPreferences).forEach(([key, value]) => {
+Object.entries(AppStorage).forEach(([key, value]) => {
 	if (globalMemento.get(key) === undefined) {
 		setInMemento(globalMemento, key, value);
 		console.log(`${key}: ${globalMemento.get(key)}`);
 	}
 });
-
-
-
-
