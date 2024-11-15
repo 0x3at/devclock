@@ -7,4 +7,5 @@ export type Heartbeat = {
 	lineCount?: number;
 	changeCount?: number;
 	currentLanguage?: string;
+	duration?: number;
 };

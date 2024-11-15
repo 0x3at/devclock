@@ -9,13 +9,131 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "devclock.helloWorld",
-        "title": "Hello World"
+        "command": "devclock.syncMode",
+        "title": "Set Sync Mode",
+        "category": "DevClock"
+      },
+      {
+        "command": "devclock.globalStorage",
+        "title": "Set Storage Path",
+        "category": "DevClock"
+      }
+    ],
+    "configuration": {
+      "properties": {
+        "devclock.interface.showTimer": {
+          "type": "boolean",
+          "default": true
+        },
+        "devclock.interface.timerAlignment": {
+          "type": "string",
+          "default": "Left",
+          "enum": [
+            "Left",
+            "Right"
+          ]
+        },
+        "devclock.config.debug": {
+          "type": "boolean",
+          "default": false
+        },
+        "devclock.config.syncMode": {
+          "type": "string",
+          "default": null,
+          "enum": [
+            "HYBRID",
+            "LOCAL",
+            "CLOUD"
+          ],
+          "enumDescriptions": [
+            "Hybrid: Sync with local DB and cloud",
+            "Local: Sync only with local DB",
+            "Cloud: Sync only with cloud"
+          ],
+          "description": "Sync Targets for the Time Data"
+        },
+        "devclock.config.throttleTime": {
+          "type": "number",
+          "default": 10000,
+          "enum": [
+            5000,
+            10000,
+            15000,
+            30000,
+            60000
+          ],
+          "enumDescriptions": [
+            "Capture Doc Changed events every 5 seconds",
+            "Capture Doc Changed events every 10 seconds",
+            "Capture Doc Changed events every 15 seconds",
+            "Capture Doc Changed events every 30 seconds",
+            "Capture Doc Changed events every 60 seconds"
+          ],
+          "description": "Doc Changed events only, which can fire multiple times per second when editing"
+        },
+        "devclock.config.heartbeatThreshold": {
+          "type": "number",
+          "default": 100,
+          "enum": [
+            100,
+            300,
+            600,
+            1200,
+            3000
+          ],
+          "enumDescriptions": [
+            "Sync after 100 events - approx 32.49 KB",
+            "Sync after 300 events - approx 97.47 KB",
+            "Sync after 600 events - approx 194.94 KB",
+            "Sync after 1200 events - approx 389.89 KB",
+            "Sync after 3000 events - approx 1 MB"
+          ],
+          "description": "Clears the in memory buffer and syncs to target mode"
+        }
+      }
+    },
+    "walkthroughs": [
+      {
+        "id": "DevClock",
+        "title": "DevClock",
+        "label": "DevClock",
+        "description": "DevClock - The Free Coding Time Tracker.",
+        "steps": [
+          {
+            "id": "DevClock-Welcome",
+            "title": "Welcome to DevClock",
+            "description": "DevClock - The Free Coding Time Tracker.",
+            "media": {
+              "image": "https://placehold.co/256x256",
+              "altText": "DevClock"
+            }
+          },
+          {
+            "id": "DevClock-SyncMode",
+            "title": "Set your Sync Mode",
+            "description": "How would you like to sync? Local, Cloud or Hybrid?\n[Set Mode](command:devclock.syncMode)",
+            "media": {
+              "image": "https://placehold.co/256x256",
+              "altText": "DevClock"
+            }
+          },
+          {
+            "id": "DevClock-globalStorage",
+            "title": "Set your Storage Path",
+            "description": "Where would you like to store your data?\n[Set Path](command:devclock.globalStorage)\n[Use Default]",
+            "media": {
+              "image": "https://placehold.co/256x256",
+              "altText": "DevClock"
+            }
+          }
+        ]
       }
     ]
   },
@@ -34,9 +152,10 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.95.0",
+    "@types/better-sqlite3": "^7.6.11",
     "@types/mocha": "^10.0.9",
     "@types/node": "20.x",
+    "@types/vscode": "^1.95.0",
     "@typescript-eslint/eslint-plugin": "^8.10.0",
     "@typescript-eslint/parser": "^8.7.0",
     "eslint": "^9.13.0",
@@ -45,5 +164,14 @@
     "typescript": "^5.6.3",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1"
-  }
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.5.0"
+  },
+  "files": [
+    "out/**/*.js",
+		"src/workers/**"
+	]
 }
+
+

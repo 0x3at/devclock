@@ -6,6 +6,8 @@ export const InitializeSession = (): Session => {
 		sessionID: sessionID(),
 		startTime: Date.now(),
 		endTime: null,
-		appName: appName()
+		appName: appName(),
+		activeTime: 0,
+		idleTime: 0
 	};
 };

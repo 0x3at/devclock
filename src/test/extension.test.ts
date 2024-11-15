@@ -27,7 +27,7 @@ const generateRandomContent = (
 
 // File management functions
 const createTempFile = async (baseDir: string): Promise<vscode.Uri> => {
-    const filename = `memory_test_${Date.now()}.txt`;
+    const filename = `memory_test_${Date.now()}.html`;
     const filePath = path.join(baseDir, filename);
     fs.writeFileSync(filePath, '', { encoding: 'utf-8' });
     return vscode.Uri.file(filePath);
