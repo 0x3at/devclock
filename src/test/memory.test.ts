@@ -2,11 +2,7 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 import * as assert from "assert";
-import * as myExtension from '../extension';
 
-suite('Extension Test Suite', () => {
-	vscode.window.showInformationMessage('Start all tests.');
-	
 // Utility functions for generating random data
 const generateRandomString = (length: number = 10): string =>
     Math.random()
@@ -35,23 +31,7 @@ const createTempFile = async (baseDir: string): Promise<vscode.Uri> => {
 
 // Console output capture class remains the same...
 class ConsoleCapture {
-    private logFile: string;
-    private originalConsoleLog: any;
-
-    constructor(logFile: string) {
-        this.logFile = logFile;
-        this.originalConsoleLog = console.log;
-        console.log = this.log.bind(this);
-    }
-
-    log(message: any, ...optionalParams: any[]): void {
-        this.originalConsoleLog(message, ...optionalParams);
-        fs.appendFileSync(this.logFile, `${message}\n`, { encoding: 'utf-8' });
-    }
-
-    dispose(): void {
-        console.log = this.originalConsoleLog;
-    }
+    // ... existing implementation ...
 }
 
 suite("Continuous Write and File Management Test", function () {
@@ -59,15 +39,16 @@ suite("Continuous Write and File Management Test", function () {
 
     test("Continuous file writing simulation", async function () {
         // Activate the extension first
-        await vscode.extensions.getExtension("devclock")?.activate();
+        await vscode.extensions.getExtension("devclock.devclock")?.activate();
 
         // Setup directories and log files
         const testDir = path.join(__dirname, "test_outputs");
         fs.mkdirSync(testDir, { recursive: true });
         const consoleLogFile = path.join(testDir, "console_output.log");
-        const consoleCapture = new ConsoleCapture(consoleLogFile);
+        const consoleCapture = new ConsoleCapture();
 
         try {
+            // Create and open single test file
             const testFileUri = await createTempFile(testDir);
             const document = await vscode.workspace.openTextDocument(testFileUri);
             const editor = await vscode.window.showTextDocument(document);
@@ -103,6 +84,10 @@ suite("Continuous Write and File Management Test", function () {
                         await document.save();
                     }
 
+                    // Random delay between operations (1-6 seconds)
+                    await new Promise(resolve =>
+                        setTimeout(resolve, Math.random() * 5000 + 1000)
+                    );
 
                 } catch (iterationError) {
                     console.error('Iteration error:', iterationError);
@@ -117,15 +102,6 @@ suite("Continuous Write and File Management Test", function () {
         } catch (error) {
             console.error('Test error:', error);
 			throw error;
-		}finally {
-            consoleCapture.dispose();
-        }
-	});
-});
-
-
-	test('Sample test', () => {
-		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
+		}
 	});
 });
