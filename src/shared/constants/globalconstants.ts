@@ -15,6 +15,7 @@ export const DATASTORE = InitializeDataStore();
 export const MILLISECONDS_IN_SECOND: number = 1000;
 export const SECONDS_IN_MINUTE: number = 60;
 export const MINUTES_IN_HOUR: number = 60;
+export const EXTENSION_NAME: string = "devclock";
 
 //* App Configuration
 export const DEBUG: boolean = false;

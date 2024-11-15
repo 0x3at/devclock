@@ -1,75 +1,56 @@
+import { workspace as ws } from "vscode";
+import { TypeAppDetails, TypeAppPreferences, TypeAppStorage, PreferenceFactory, Preference } from '../types/settings';
 import * as Globals from "./globalconstants";
-import { ContextConstants } from "./contextconstents";
+import { localStoragePaths } from "./storagepaths";
 //*
 //*Preferences Constants
 //*-The Final Runtime configuration comprimised of stable constants
 //* and user based constants
 //*
 
-// Helper functions
-const getFromMemento = <T>(memento: any, key: string, defaultValue: T): T =>
-	memento.get(key) ?? defaultValue;
 
-const setInMemento = <T>(memento: any, key: string, value: T): void => {
-	memento.update(key, value);
+//? Get from global configuration
+const CONFIG = ws.getConfiguration(Globals.EXTENSION_NAME);
+const PreferenceFactory: PreferenceFactory = (name:string) => {
+	let value:string|number|boolean|undefined = CONFIG.get(name);
+
+	let listener = ws.onDidChangeConfiguration((event) => {
+		if (event.affectsConfiguration(name)) {
+			value = CONFIG.get(name);
+			console.log(`Value of ${name.toString()} changed to ${value!.toString()}`);
+		}
+	});
+
+	return {
+		get: () => value,
+		listener: () => listener
+	};
 };
 
-// Get global memento reference
-const globalMemento = ContextConstants().getGlobalStateMap();
-// Read from memento with fallback to globals
-export const AppDetails = {
-	appName: getFromMemento(globalMemento, "appName", Globals.APP_NAME),
-	appRoot: getFromMemento(globalMemento, "appRoot", Globals.APP_ROOT),
-	startTime: getFromMemento(globalMemento, "startTime", Globals.START_TIME),
-	sessionID: getFromMemento(globalMemento, "sessionID", Globals.SESSION_ID),
-	machineID: getFromMemento(globalMemento, "machineID", Globals.MACHINE_ID),
-	appRuntime: getFromMemento(globalMemento, "appRuntime", Globals.APP_RUNTIME)
+export const AppDetails: TypeAppDetails = {
+	appName: Globals.APP_NAME,
+	appRoot: Globals.APP_ROOT,
+	startTime:  Globals.START_TIME,
+	sessionID:  Globals.SESSION_ID,
+	machineID:  Globals.MACHINE_ID,
+	isDesktop:  Globals.APP_RUNTIME === "desktop"
 };
 
-// Write any missing values back to memento
-Object.entries(AppDetails).forEach(([key, value]) => {
-	if (globalMemento.get(key) === undefined) {
-		setInMemento(globalMemento, key, value);
-	}
-});
 
-export const AppPreferences = {
-	showTimer: getFromMemento(globalMemento, "showTimer", Globals.SHOW_TIMER),
-	timerAlignment: getFromMemento(
-		globalMemento,
-		"timerAlignment",
-		Globals.TIMER_ALIGNMENT
-	),
-	syncMode: getFromMemento(globalMemento, "syncMode", Globals.SYNC_MODE),
-	throttleTime: getFromMemento(
-		globalMemento,
-		"throttleTime",
-		Globals.THROTTLE_TIME
-	),
-	heartbeatThreshold: getFromMemento(
-		globalMemento,
-		"heartbeatThreshold",
-		Globals.HEARTBEAT_THRESHOLD
-	),
-	debug: getFromMemento(globalMemento, "debug", Globals.DEBUG)
+export const AppPreferences: TypeAppPreferences = {
+	showTimer: PreferenceFactory("interface.showTimer"),
+	timerAlignment: PreferenceFactory("interface.timerAlignment"),
+	debug: PreferenceFactory("config.debug"),
+	syncMode: PreferenceFactory("config.syncMode"),
+	throttleTime: PreferenceFactory("config.throttleTime"),
+	heartbeatThreshold: PreferenceFactory("config.heartbeatThreshold")
 };
 
-// Write any missing values back to memento
-Object.entries(AppPreferences).forEach(([key, value]) => {
-	if (globalMemento.get(key) === undefined) {
-		setInMemento(globalMemento, key, value);
-		console.log(`${key}: ${globalMemento.get(key)}`);
-	}
-});
 
-export const AppStorage = {
-	globalStorage: ContextConstants().getGlobalDirectory,
-	appSecrets: ContextConstants().getAppSecrets()
+export const AppStorage: TypeAppStorage = {
+	globalStorage: localStoragePaths().getGlobalDirectory(),
+	appSecrets: localStoragePaths().getAppSecrets()
 };
 
-Object.entries(AppStorage).forEach(([key, value]) => {
-	if (globalMemento.get(key) === undefined) {
-		setInMemento(globalMemento, key, value);
-		console.log(`${key}: ${globalMemento.get(key)}`);
-	}
-});
+
+

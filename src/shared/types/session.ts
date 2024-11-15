@@ -3,4 +3,6 @@ export type Session = {
 	startTime: number;
 	endTime: number | null;
 	appName: string;
+	activeTime: number;
+	idleTime: number;
 };

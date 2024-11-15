@@ -1,13 +1,11 @@
-import { StatusBarItem, window, StatusBarAlignment } from "vscode";
-import { START_TIME } from "../../shared/constants/globalconstants";
-import { CurrentTime } from "../../shared/utils/time";
-import { ToTimeStamp } from "../../shared/utils/time";
-import { absSubtract } from "../../shared/utils/maths";
-import { DATASTORE } from "../../shared/constants/globalconstants";
-import { TimeStamp } from "../../shared/utils/time";
+import { StatusBarAlignment, StatusBarItem, window } from "vscode";
 import { IdleStateManager } from "../../domain/session/idleactions";
-import { TimeConverter } from "../../shared/utils/time";
+import { DATASTORE, START_TIME } from "../../shared/constants/globalconstants";
+import { absSubtract } from "../../shared/utils/maths";
+import { CurrentTime, TimeStamp, ToTimeStamp } from "../../shared/utils/time";
 // //TODO: Replace alignment with preferences map
+
+import { AppPreferences } from "../../shared/constants/settings";
 
 export type StatusBarTimer = () => {
 	show: () => void;
@@ -19,8 +17,8 @@ export type StatusBarTimer = () => {
 
 export const statusBarTimer: StatusBarTimer = () => {
 	let idleStateManager: IdleStateManager = DATASTORE.getIdleStateManager();
-	const statusBarItem: StatusBarItem = window.createStatusBarItem(
-		StatusBarAlignment.Left,
+	let statusBarItem: StatusBarItem = window.createStatusBarItem(
+		StatusBarAlignment[AppPreferences.timerAlignment.get() as keyof typeof StatusBarAlignment],
 		100
 	);
 
@@ -36,7 +34,6 @@ export const statusBarTimer: StatusBarTimer = () => {
 		const totalTime = absSubtract(currentTime, START_TIME);
 		const idleTime = idleStateManager.updateIdleTime();
 		const activeTime = Math.max(0, totalTime - idleTime);
-
 
 		const timeDisplay = idleStateManager.getState().isIdle
 			? formatTimeDisplay(ToTimeStamp(idleTime))

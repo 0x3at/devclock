@@ -3,7 +3,6 @@ export function throttle<T extends (...args: any[]) => void>(
 	limit: number
 ): (...args: Parameters<T>) => void {
 	let lastExecutionTime: number | null = null;
-	console.log("Throttling Function:", func);
 	return function (...args: Parameters<T>) {
 		const now = Date.now();
 		if (lastExecutionTime === null || now - lastExecutionTime >= limit) {

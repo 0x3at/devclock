@@ -5,6 +5,7 @@ import {
 	debugHasChanged
 } from "../../../domain/heartbeat/actions";
 import { throttle } from "../../../shared/utils/throttle";
+import { AppPreferences } from "../../../shared/constants/settings";
 
 export type Listener = {
 	pause: () => void;
@@ -31,8 +32,8 @@ const createListener = <T>(
 	};
 };
 
-export const textChanged = () =>
-	createListener(ws.onDidChangeTextDocument, contentHasChanged, 0);
+export const textChanged = (throttleTime:number) =>
+	createListener(ws.onDidChangeTextDocument, contentHasChanged, throttleTime);
 export const docOpened = () =>
 	createListener(ws.onDidOpenTextDocument, fileHasChanged, 10000);
 export const docClosed = () =>
@@ -46,7 +47,7 @@ export const debugEnd = () =>
 
 export const Listeners = () => {
 	return [
-		textChanged(),
+		textChanged(AppPreferences.throttleTime.get()),
 		docOpened(),
 		docClosed(),
 		docSaved(),

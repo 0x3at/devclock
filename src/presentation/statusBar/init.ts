@@ -1,6 +1,6 @@
-import { statusBarTimer} from "./actions";
+import { statusBarTimer } from "./timer.actions";
 
-export const InitializeGui = () => {
+export const InitializeGuiTimer = () => {
     let statusBar = statusBarTimer();
 
     // Initialize the status bar
@@ -21,5 +21,3 @@ export const InitializeGui = () => {
         statusBar: initialized.statusBar,
     };
 };
-
-
