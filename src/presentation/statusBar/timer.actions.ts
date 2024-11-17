@@ -1,11 +1,10 @@
 import { StatusBarAlignment, StatusBarItem, window } from "vscode";
 import { IdleStateManager } from "../../domain/session/idleactions";
 import { DATASTORE, START_TIME } from "../../shared/constants/globalconstants";
+import { AppPreferences } from "../../shared/constants/settings";
 import { absSubtract } from "../../shared/utils/maths";
 import { CurrentTime, TimeStamp, ToTimeStamp } from "../../shared/utils/time";
-// //TODO: Replace alignment with preferences map
 
-import { AppPreferences } from "../../shared/constants/settings";
 
 export type StatusBarTimer = () => {
 	show: () => void;
@@ -18,7 +17,9 @@ export type StatusBarTimer = () => {
 export const statusBarTimer: StatusBarTimer = () => {
 	let idleStateManager: IdleStateManager = DATASTORE.getIdleStateManager();
 	let statusBarItem: StatusBarItem = window.createStatusBarItem(
-		StatusBarAlignment[AppPreferences.timerAlignment.get() as keyof typeof StatusBarAlignment],
+		StatusBarAlignment[
+			AppPreferences.timerAlignment.get() as keyof typeof StatusBarAlignment
+		],
 		100
 	);
 
@@ -55,27 +56,3 @@ export const statusBarTimer: StatusBarTimer = () => {
 		disposable: () => statusBarItem
 	};
 };
-
-//!Deprecated
-// export const statusBarTimer = () => {
-//     let statusBarItem:StatusBarItem = window.createStatusBarItem(StatusBarAlignment.Left, 100);
-
-//     return{
-//         show: () => {statusBarItem.show();},
-//         StampTime: () =>{
-//             return setInterval(() => {
-//                 const currentTimestamp:TimeStamp = ToTimeStamp(absSubtract(CurrentTime("m"), START_TIME));
-//                 const idleOffset:TimeStamp = ToTimeStamp(DATASTORE.getTotalIdleTime());
-//                 const timeStamp:TimeStamp = {
-//                     hours: currentTimestamp.hours - idleOffset.hours,
-//                     minutes: currentTimestamp.minutes - idleOffset.minutes,
-//                     seconds: currentTimestamp.seconds - idleOffset.seconds
-//                 };
-//                 statusBarItem.text = DATASTORE.getState() === Events.idle ? `$(alert)IDLE ${idleOffset.hours}hrs ${idleOffset.minutes}mins ${idleOffset.seconds}s ` : `$(watch) ${timeStamp.hours}hrs ${timeStamp.minutes}mins ${timeStamp.seconds}s `;
-//             }, 1000);
-//         },
-//         tooltip: (tooltip:string = "Current Coding Session Time!") =>{statusBarItem.tooltip = tooltip;},
-//         hide: () =>{statusBarItem.hide();},
-//         disposable: () =>{return statusBarItem;}
-//     };
-// };

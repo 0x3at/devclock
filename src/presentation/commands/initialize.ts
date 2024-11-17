@@ -10,9 +10,7 @@ import {
 	Disposable,
 	Uri
 } from "vscode";
-
-import { createDatabase, updateDatabase } from "../../workers/createdbprocess";
-
+import { createDatabase, updateDatabase } from "../../infrastructure/storage/local/createdbprocess";
 const errorMessage = {
 	detail: "Something went wrong",
 	modal: true
@@ -23,11 +21,7 @@ const defaultSetMessage = {
 	modal: false
 };
 
-// export type SetupAppCommands = (cts: ExtensionContext) => Promise<{
-// 	getDisposables: () => Disposable[];
-// }>;
-
-export const asyncAppCommands = (ctx: ExtensionContext) => {
+export const devclockCommands = (ctx: ExtensionContext) => {
 	let setSync: Disposable = commands.registerCommand(
 		"devclock.syncMode",
 		() => setSyncMode(ctx)

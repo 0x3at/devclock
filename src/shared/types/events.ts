@@ -1,7 +1,7 @@
 export enum Events {
-	initialize,
-	coding,
-	debugging,
-	idle,
-	config
+	initialize = "initialize",
+	coding = "coding",
+	debugging = "debugging",
+	idle = "idle",
+	config = "config"
 }

@@ -55,7 +55,3 @@ export const Listeners = () => {
 		debugEnd()
 	];
 };
-
-	//TODO: Implement this
-	// export const configChange = () =>
-// 	createListener(ws.onDidChangeConfiguration, configHasChanged, 10000);

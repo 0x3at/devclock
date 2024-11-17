@@ -14,12 +14,7 @@ try {
 
 	DB.exec(`
         CREATE TABLE IF NOT EXISTS sessions (
-            sessionID TEXT PRIMARY KEY,
-            startTime INTEGER NOT NULL,
-            endTime INTEGER,
-            appName TEXT NOT NULL,
-            activeTime INTEGER,
-            idleTime INTEGER
+            TEGER
         );
         
         CREATE TABLE IF NOT EXISTS heartbeats (
