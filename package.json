@@ -14,7 +14,7 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "devclock.helloWorld",
+				"command": "devclock.execDebug",
 				"title": "Hello World"
 			}
 		]

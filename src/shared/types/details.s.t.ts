@@ -2,10 +2,10 @@
 
 import { LanguageConfiguration } from 'vscode';
 
-type StatMap = Map<string, FileStats | LanguageStat>;
+type StatMap<T = FileStats | LanguageStat> = Map<string, T>;
 export type Details = {
-	files: StatMap;
-	langs: StatMap;
+	files: StatMap<FileStats>;
+	langs: StatMap<LanguageStat>;
 };
 
 export type LanguageStat = {
