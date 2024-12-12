@@ -1,44 +1,49 @@
-import * as vscode from "vscode";
-import { CONTEXT } from "./infrastructure/vsc/context";
-import { devclockCommands as devclockCommands } from "./presentation/commands/initialize";
+/** @format */
 
-export async function activate(ctx: vscode.ExtensionContext) {
+import * as vscode from 'vscode';
+import { AppDetails, AppPreferences } from './shared/settings';
+import { ContextStore } from './shared/ctx.s';
+import { workspaceListeners } from './infra/listeners/workspace.listeners';
+import { Preference } from './utils/generators/preference.g';
 
-	CONTEXT.setContext(ctx); //* Set the context to easily share
+export async function activate(context: vscode.ExtensionContext) {
+	const ctxStore = ContextStore(context); //* Just in case
 
-	const startup = devclockCommands(ctx);
-	const commandDisposables = startup.getDisposables(); //TODO: Find a way to dynamically get the disposables
-	vscode.commands.executeCommand('devclock.setupDatabase');
-
-	commandDisposables.map((d) => ctx.subscriptions.push(d));
-
-
-	if (CONTEXT.getContext() !== null) {
-		try {
-			const impSettings = await import("./shared/constants/settings.js");
-			const impListeners = await import(
-				"./infrastructure/vsc/listeners/vsceventlisteners.js"
-			);
-			const impStatusBar = await import("./presentation/statusBar/init.js");
-			const globalStoragePath = await impSettings.AppStorage.globalStorage; //* import to instantiate
-			const heartbeatListeners = impListeners
-				.Listeners()
-				.map((listener) => listener.disposable);
-			const configListeners = Object.values(impSettings.AppPreferences).map(
-				(preference) => preference.listener()
-			);
-			heartbeatListeners.forEach((disposable) =>
-				ctx.subscriptions.push(disposable)
-			);
-			configListeners.forEach((listener) => ctx.subscriptions.push(listener));
-			if (impSettings.AppPreferences.showTimer.get()) {
-				const statusBar = impStatusBar.InitializeGuiTimer();
-				ctx.subscriptions.push(statusBar.statusBar.disposable());
+	//? Debug Help Command
+	const execDebug = vscode.commands.registerCommand(
+		'devclock.execDebug',
+		() => {
+			vscode.window.showErrorMessage('debug', { modal: true });
 		}
-	} catch (error) {
-		console.error(error);
-	}
+	);
+	ctxStore.subscribe(execDebug);
+
+	if (ctxStore.get()) {
+		AppPreferences;
+		AppDetails;
+		Object.entries(AppPreferences).forEach(
+			([_, onPreferenceHasChanged]) => {
+				console.log('Subscribing listener');
+				const disposable = onPreferenceHasChanged.disposable();
+				if (disposable) {
+					ctxStore.subscribe(disposable);
+				}
+			}
+		);
+		console.log('Settings Loaded');
+
+		const documentListeners = workspaceListeners();
+		documentListeners.forEach((listener) => {
+			console.log('Subscribing listener');
+			const disposable = listener.disposable;
+			context.subscriptions.push(disposable!);
+		});
+		console.log('Editor Listeners Loaded');
+
+		//?Load Third Party API Listeners(Git)
+
+		//?Load UI
 	}
 }
-export function deactivate() {}
 
+export function deactivate() {}

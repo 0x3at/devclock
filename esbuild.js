@@ -39,7 +39,7 @@ async function main() {
 		logLevel: 'silent',
 		plugins: [
 			/* add to the end of plugins array */
-			esbuildProblemMatcherPlugin
+			esbuildProblemMatcherPlugin,
 		],
 	});
 	if (watch) {
