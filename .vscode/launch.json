@@ -6,20 +6,13 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"args": ["--extensionDevelopmentPath=${workspaceFolder}"],
-			"name": "Launch Extension",
-			"outFiles": ["${workspaceFolder}/out/**/*.js"],
-			"preLaunchTask": "npm",
-			"request": "launch",
-			"type": "extensionHost"
-		},
-		{
-			"name": "Run Extension",
+			"name": "Run Extension (Production)",
 			"type": "extensionHost",
 			"request": "launch",
-			"args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+			"args": ["--extensionDevelopmentPath=${workspaceFolder}/dist"],
 			"outFiles": ["${workspaceFolder}/dist/**/*.js"],
-			"preLaunchTask": "${defaultBuildTask}"
+			"preLaunchTask": "npm: package",
+			"sourceMaps": true
 		}
 	]
 }

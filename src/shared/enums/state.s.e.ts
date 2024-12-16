@@ -2,6 +2,6 @@
 
 export enum State {
 	active = 'active',
-	debug = 'debugging',
+	debug = 'debug',
 	idle = 'idle',
 }

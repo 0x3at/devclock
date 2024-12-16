@@ -2,7 +2,9 @@
 
 import * as vscode from 'vscode';
 import { ContextStore } from './shared/ctx.s';
-
+import { Devclock } from './domain/devclock.api';
+import { DashboardView } from './dashboard/dashboard.panel';
+import { DataRunnerConstructor } from './data.runner';
 export async function activate(context: vscode.ExtensionContext) {
 	const ctxStore = ContextStore(context); //* Just in case
 
@@ -10,33 +12,39 @@ export async function activate(context: vscode.ExtensionContext) {
 	const execDebug = vscode.commands.registerCommand(
 		'devclock.execDebug',
 		() => {
-			vscode.window.showErrorMessage(
-				`${vscode.workspace.textDocuments.map((doc) => doc.uri)}`,
-				{ modal: true }
-			);
+			vscode.window.showErrorMessage(`Shits current`, {
+				modal: true,
+			});
 		}
 	);
-	ctxStore.subscribe(execDebug);
+	const showDashboard = vscode.commands.registerCommand(
+		'devclock.showDashboard',
+		() => {
+			const dashboard = DashboardView(context);
+			dashboard.reveal();
+		}
+	);
+	const deactivateDevclock = vscode.commands.registerCommand(
+		'devclock.deactivate',
+		() => {
+			deactivate(context.subscriptions);
+		}
+	);
 
-	// if (ctxStore.get()) {
-	// 	AppPreferences;
-	// 	AppDetails;
-	// 	// ? Load and Activate Preferences & Listeners
-	// 	Object.entries(AppPreferences).forEach(
-	// 		([_, onPreferenceHasChanged]) => {
-	// 			console.log('Subscribing listener');
-	// 			const disposable = onPreferenceHasChanged.disposable();
-	// 			if (disposable) {
-	// 				ctxStore.subscribe(disposable);
-	// 			}
-	// 		}
-	// 	);
-
-	// 	// ? Load Activity Listeners
-
-	// 	// ?
-
-	// 	// ? Load Statistic Listeners
+	const logger = vscode.window.createOutputChannel('Devclock', { log: true });
+	const dataRunner = DataRunnerConstructor(ctxStore.get(), logger);
+	const devclock = Devclock(ctxStore.get(), logger, dataRunner);
+	const devclockDisposables = devclock.activate();
+	devclockDisposables.forEach((d) => {
+		context.subscriptions.push(d);
+	});
+	context.subscriptions.push(execDebug);
+	context.subscriptions.push(showDashboard);
+	context.subscriptions.push(deactivateDevclock);
 }
 
-export function deactivate() {}
+export function deactivate(disposables: vscode.Disposable[]) {
+	disposables.forEach((d) => {
+		d.dispose();
+	});
+}

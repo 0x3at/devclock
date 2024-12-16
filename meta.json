@@ -1,0 +1,798 @@
+{
+  "inputs": {
+    "src/shared/ctx.s.ts": {
+      "bytes": 260,
+      "imports": [
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/shared/enums/state.s.e.ts": {
+      "bytes": 92,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/utils/time.ts": {
+      "bytes": 648,
+      "imports": [
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/domain/timer.statusbar.ts": {
+      "bytes": 621,
+      "imports": [
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/shared/enums/state.s.e.ts",
+          "kind": "import-statement",
+          "original": "../shared/enums/state.s.e"
+        },
+        {
+          "path": "src/utils/time.ts",
+          "kind": "import-statement",
+          "original": "../utils/time"
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/utils/generators/vsc.listener.impl.ts": {
+      "bytes": 908,
+      "imports": [
+        {
+          "path": "../../shared/types/generic.s.t",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/domain/broker/broker.init.ts": {
+      "bytes": 2256,
+      "imports": [
+        {
+          "path": "./broker.main",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "../state/state.manager",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/generators/vsc.listener.impl.ts",
+          "kind": "import-statement",
+          "original": "../../utils/generators/vsc.listener.impl"
+        },
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/domain/broker/broker.main.ts": {
+      "bytes": 3355,
+      "imports": [
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/utils/debounce.ts": {
+      "bytes": 795,
+      "imports": [
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/utils/generators/preference.g.ts": {
+      "bytes": 543,
+      "imports": [
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/shared/settings.ts": {
+      "bytes": 1143,
+      "imports": [
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/utils/generators/preference.g.ts",
+          "kind": "import-statement",
+          "original": "../utils/generators/preference.g"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/domain/state/stores/session.store.ts": {
+      "bytes": 10477,
+      "imports": [
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/shared/settings.ts",
+          "kind": "import-statement",
+          "original": "../../../shared/settings"
+        },
+        {
+          "path": "../../../shared/types/session.s.t",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/domain/state/stores/timebank.store.ts": {
+      "bytes": 3171,
+      "imports": [
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/shared/enums/state.s.e.ts",
+          "kind": "import-statement",
+          "original": "../../../shared/enums/state.s.e"
+        },
+        {
+          "path": "src/shared/settings.ts",
+          "kind": "import-statement",
+          "original": "../../../shared/settings"
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/domain/state/state.manager.ts": {
+      "bytes": 3688,
+      "imports": [
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/shared/enums/state.s.e.ts",
+          "kind": "import-statement",
+          "original": "../../shared/enums/state.s.e"
+        },
+        {
+          "path": "src/utils/debounce.ts",
+          "kind": "import-statement",
+          "original": "../../utils/debounce"
+        },
+        {
+          "path": "src/domain/state/stores/session.store.ts",
+          "kind": "import-statement",
+          "original": "./stores/session.store"
+        },
+        {
+          "path": "src/domain/state/stores/timebank.store.ts",
+          "kind": "import-statement",
+          "original": "./stores/timebank.store"
+        },
+        {
+          "path": "../../database/db.manager",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/domain/devclock.api.ts": {
+      "bytes": 1856,
+      "imports": [
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/domain/timer.statusbar.ts",
+          "kind": "import-statement",
+          "original": "./timer.statusbar"
+        },
+        {
+          "path": "src/domain/broker/broker.init.ts",
+          "kind": "import-statement",
+          "original": "./broker/broker.init"
+        },
+        {
+          "path": "src/domain/broker/broker.main.ts",
+          "kind": "import-statement",
+          "original": "./broker/broker.main"
+        },
+        {
+          "path": "src/domain/state/state.manager.ts",
+          "kind": "import-statement",
+          "original": "./state/state.manager"
+        },
+        {
+          "path": "../database/db.manager",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/dashboard/dashboard.panel.ts": {
+      "bytes": 907,
+      "imports": [
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/file-uri-to-path/index.js": {
+      "bytes": 1723,
+      "imports": [
+        {
+          "path": "path",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/bindings/bindings.js": {
+      "bytes": 5986,
+      "imports": [
+        {
+          "path": "fs",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "node_modules/file-uri-to-path/index.js",
+          "kind": "require-call",
+          "original": "file-uri-to-path"
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/sqlite3/lib/sqlite3-binding.js": {
+      "bytes": 59,
+      "imports": [
+        {
+          "path": "node_modules/bindings/bindings.js",
+          "kind": "require-call",
+          "original": "bindings"
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/sqlite3/lib/trace.js": {
+      "bytes": 1357,
+      "imports": [
+        {
+          "path": "util",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/sqlite3/lib/sqlite3.js": {
+      "bytes": 6365,
+      "imports": [
+        {
+          "path": "path",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "node_modules/sqlite3/lib/sqlite3-binding.js",
+          "kind": "require-call",
+          "original": "./sqlite3-binding.js"
+        },
+        {
+          "path": "events",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "node_modules/sqlite3/lib/trace.js",
+          "kind": "require-call",
+          "original": "./trace"
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/sqlite/build/utils/format-error.js": {
+      "bytes": 688,
+      "imports": [
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/sqlite/build/Statement.js": {
+      "bytes": 6951,
+      "imports": [
+        {
+          "path": "node_modules/sqlite/build/utils/format-error.js",
+          "kind": "require-call",
+          "original": "./utils/format-error"
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/sqlite/build/utils/migrate.js": {
+      "bytes": 4398,
+      "imports": [
+        {
+          "path": "fs",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/sqlite/build/utils/strings.js": {
+      "bytes": 623,
+      "imports": [
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/sqlite/build/Database.js": {
+      "bytes": 10948,
+      "imports": [
+        {
+          "path": "node_modules/sqlite/build/Statement.js",
+          "kind": "require-call",
+          "original": "./Statement"
+        },
+        {
+          "path": "node_modules/sqlite/build/utils/migrate.js",
+          "kind": "require-call",
+          "original": "./utils/migrate"
+        },
+        {
+          "path": "node_modules/sqlite/build/utils/strings.js",
+          "kind": "require-call",
+          "original": "./utils/strings"
+        },
+        {
+          "path": "node_modules/sqlite/build/utils/format-error.js",
+          "kind": "require-call",
+          "original": "./utils/format-error"
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/sqlite/build/index.js": {
+      "bytes": 769,
+      "imports": [
+        {
+          "path": "node_modules/sqlite/build/Statement.js",
+          "kind": "require-call",
+          "original": "./Statement"
+        },
+        {
+          "path": "node_modules/sqlite/build/Database.js",
+          "kind": "require-call",
+          "original": "./Database"
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "cjs"
+    },
+    "src/database/db.manager.ts": {
+      "bytes": 3294,
+      "imports": [
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node_modules/sqlite3/lib/sqlite3.js",
+          "kind": "import-statement",
+          "original": "sqlite3"
+        },
+        {
+          "path": "node_modules/sqlite/build/index.js",
+          "kind": "import-statement",
+          "original": "sqlite"
+        },
+        {
+          "path": "path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "../shared/types/session.s.t",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "../../package.json",
+          "kind": "require-resolve",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/extension.ts": {
+      "bytes": 1746,
+      "imports": [
+        {
+          "path": "vscode",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/shared/ctx.s.ts",
+          "kind": "import-statement",
+          "original": "./shared/ctx.s"
+        },
+        {
+          "path": "src/domain/devclock.api.ts",
+          "kind": "import-statement",
+          "original": "./domain/devclock.api"
+        },
+        {
+          "path": "src/dashboard/dashboard.panel.ts",
+          "kind": "import-statement",
+          "original": "./dashboard/dashboard.panel"
+        },
+        {
+          "path": "src/database/db.manager.ts",
+          "kind": "import-statement",
+          "original": "./database/db.manager"
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "dist/extension.js": {
+      "imports": [
+        {
+          "path": "path",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "fs",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "util",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "events",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "fs",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "vscode",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "vscode",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "vscode",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "vscode",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "vscode",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "vscode",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "vscode",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "fs",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "../../package.json",
+          "kind": "require-resolve",
+          "external": true
+        }
+      ],
+      "exports": [],
+      "entryPoint": "src/extension.ts",
+      "inputs": {
+        "node_modules/file-uri-to-path/index.js": {
+          "bytesInOutput": 466
+        },
+        "node_modules/bindings/bindings.js": {
+          "bytesInOutput": 2578
+        },
+        "node_modules/sqlite3/lib/sqlite3-binding.js": {
+          "bytesInOutput": 58
+        },
+        "node_modules/sqlite3/lib/trace.js": {
+          "bytesInOutput": 732
+        },
+        "node_modules/sqlite3/lib/sqlite3.js": {
+          "bytesInOutput": 2671
+        },
+        "node_modules/sqlite/build/utils/format-error.js": {
+          "bytesInOutput": 339
+        },
+        "node_modules/sqlite/build/Statement.js": {
+          "bytesInOutput": 1363
+        },
+        "node_modules/sqlite/build/utils/migrate.js": {
+          "bytesInOutput": 1795
+        },
+        "node_modules/sqlite/build/utils/strings.js": {
+          "bytesInOutput": 226
+        },
+        "node_modules/sqlite/build/Database.js": {
+          "bytesInOutput": 2481
+        },
+        "node_modules/sqlite/build/index.js": {
+          "bytesInOutput": 425
+        },
+        "src/extension.ts": {
+          "bytesInOutput": 851
+        },
+        "src/shared/ctx.s.ts": {
+          "bytesInOutput": 117
+        },
+        "src/domain/timer.statusbar.ts": {
+          "bytesInOutput": 348
+        },
+        "src/utils/time.ts": {
+          "bytesInOutput": 357
+        },
+        "src/utils/generators/vsc.listener.impl.ts": {
+          "bytesInOutput": 177
+        },
+        "src/domain/broker/broker.init.ts": {
+          "bytesInOutput": 1331
+        },
+        "src/domain/broker/broker.main.ts": {
+          "bytesInOutput": 1450
+        },
+        "src/utils/debounce.ts": {
+          "bytesInOutput": 129
+        },
+        "src/domain/state/stores/session.store.ts": {
+          "bytesInOutput": 4543
+        },
+        "src/shared/settings.ts": {
+          "bytesInOutput": 527
+        },
+        "src/utils/generators/preference.g.ts": {
+          "bytesInOutput": 354
+        },
+        "src/domain/state/stores/timebank.store.ts": {
+          "bytesInOutput": 1324
+        },
+        "src/domain/state/state.manager.ts": {
+          "bytesInOutput": 1660
+        },
+        "src/domain/devclock.api.ts": {
+          "bytesInOutput": 554
+        },
+        "src/dashboard/dashboard.panel.ts": {
+          "bytesInOutput": 754
+        },
+        "src/database/db.manager.ts": {
+          "bytesInOutput": 2104
+        }
+      },
+      "bytes": 30559
+    }
+  }
+}
