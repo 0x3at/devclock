@@ -6,6 +6,7 @@ import { initializeBrokerSubscriptions } from './broker/broker.init';
 import { EventBrokerConstructor } from './broker/broker.main';
 import { StateManagerConstructor } from './state/state.manager';
 import { DataRunnerConstructor } from '../data.runner';
+
 export const Devclock = (
 	ctx: ExtensionContext,
 	logger: LogOutputChannel,
@@ -17,6 +18,9 @@ export const Devclock = (
 		null;
 	let timeTicker: NodeJS.Timeout | null = null;
 	let disposables: Disposable[] = [];
+
+	//TODO: Move Tick Logic to its own file?
+	//TODO: Test performance between Event Queue & immediate Event Publishing
 	const onTick = async () => {
 		let now = Date.now();
 		logger.debug('Processing events');
@@ -40,9 +44,11 @@ export const Devclock = (
 			stateManager = StateManagerConstructor(logger, dataRunner);
 			statusBarTimer = StatusBarTimerConstructor();
 			stateManager!.initialize(Date.now());
-			initializeBrokerSubscriptions(stateManager!, broker!).forEach(
-				(disposable) => disposables.push(disposable)
-			);
+			initializeBrokerSubscriptions(
+				stateManager!,
+				broker!,
+				logger
+			).forEach((disposable) => disposables.push(disposable));
 			logger.info('Devclock Extension Activated');
 			timeTicker = setInterval(() => {
 				onTick();

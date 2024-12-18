@@ -1,6 +1,6 @@
 /** @format */
 
-import { env } from 'vscode';
+import { env, LogOutputChannel } from 'vscode';
 
 import { Preference } from '../utils/generators/preference.g';
 
@@ -30,4 +30,36 @@ export const AppPreferences = {
 	heartbeatThreshold: Preference('config.heartbeatThreshold', EXTENSION_NAME),
 	idleThreshold: Preference('config.idleThreshold', EXTENSION_NAME), //TODO: ADDD TO CONFIG
 	timeScale: Preference('config.timeScale', EXTENSION_NAME), //TODO: ADDD TO CONFIG
+	syncTimescale: Preference('config.syncTimeScale', EXTENSION_NAME),
+};
+
+export const FileBlacklist: Record<string, number> = {
+	node_modules: 4,
+	untitled: 4,
+	'://': 4,
+	devclock: 4,
+	'.log': 4,
+};
+
+export const addToBlacklist = (fileName: string, logger: LogOutputChannel) => {
+	FileBlacklist[fileName] = FileBlacklist[fileName]
+		? FileBlacklist[fileName] + 1
+		: 1;
+	logger.trace(`Error occurred during file event\nBlacklisted ${fileName}`);
+};
+export const isBlacklisted = (
+	fileName: string,
+	logger: LogOutputChannel
+): boolean => {
+	Object.entries(FileBlacklist).forEach(([key, value]) => {
+		if (fileName.toLowerCase().includes(key)) {
+			logger.trace(`${fileName} is blacklisted`);
+			FileBlacklist[fileName] = 4;
+		}
+	});
+
+	if (FileBlacklist[fileName] > 3) {
+		return true;
+	}
+	return false;
 };

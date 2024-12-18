@@ -15,6 +15,7 @@ import { debounceState } from '../../utils/debounce';
 import { SessionStore } from './stores/session.store';
 import { TimebankStore } from './stores/timebank.store';
 import { DataRunnerConstructor } from '../../data.runner';
+import { AppPreferences } from '../../shared/settings';
 
 export const StateManagerConstructor = (
 	logger: LogOutputChannel,
@@ -39,16 +40,22 @@ export const StateManagerConstructor = (
 		timeTracker.start(state, now);
 	};
 
+	//? trigger reset on idle timer & store activity state
 	const activityMonitor = (() => {
+		let lastActivity = Date.now();
 		const idleCheck = debounceState(() => {
-			transition(State.idle, Date.now());
-			logger.info('Idle check triggered');
-		}, 60 * 1000);
+			if (currentState !== State.idle) {
+				transition(State.idle, Date.now());
+				logger.info('Transitioning to idle state');
+			}
+		}, AppPreferences.idleThreshold.getInt() ?? 15 * 60 * 60 * 1000); //15 minutes
 
 		return {
-			recordActivity: () => {
-				if ((currentState as State) === State.idle) {
-					transition(State.active, Date.now());
+			lastActivity: () => lastActivity,
+			recordActivity: (now: number) => {
+				lastActivity = now;
+				if (currentState === State.idle) {
+					transition(State.active, now);
 				}
 				logger.info('Activity recorded, resetting idle check');
 				idleCheck();
@@ -62,10 +69,16 @@ export const StateManagerConstructor = (
 			timeTracker.tick(now);
 			session.syncTime(timeTracker.getBank(), now);
 			if (tickCounter > 300) {
+				//TODO: Update to use App Preferences 'config.syncTimeScale'
 				tickCounter = 0;
 				session.syncFileSystem(now);
 				dataRunner.saveSession(session.snapshot());
 			}
+			logger.info(
+				`${
+					(now - activityMonitor.lastActivity()) / 1000
+				}s since last activity`
+			);
 		},
 		initialize: (now: number) => {
 			timeTracker.initialize(now);
@@ -77,17 +90,15 @@ export const StateManagerConstructor = (
 			data,
 			now,
 		}: {
-			data: TextEditor[];
+			data: TextEditor | undefined;
 			now: number;
 		}) => {
-			activityMonitor.recordActivity();
+			activityMonitor.recordActivity(now);
 			if (!data) {
 				session.syncFileSystem(now);
 				return;
 			}
-			data.forEach((editor) => {
-				session.fileActivated(editor.document, now);
-			});
+			session.fileActivated(data.document, now);
 		},
 		handleFileRename: ({
 			data,
@@ -96,7 +107,7 @@ export const StateManagerConstructor = (
 			data: FileRenameEvent;
 			now: number;
 		}) => {
-			activityMonitor.recordActivity();
+			activityMonitor.recordActivity(now);
 			data.files.forEach((file) => {
 				session.fileRenamed(file.newUri, file.oldUri);
 			});
@@ -108,7 +119,7 @@ export const StateManagerConstructor = (
 			data: FileCreateEvent;
 			now: number;
 		}) => {
-			activityMonitor.recordActivity();
+			activityMonitor.recordActivity(now);
 			data.files.forEach((file) => {
 				session.fileCreated(file);
 			});
@@ -120,13 +131,13 @@ export const StateManagerConstructor = (
 			data: FileDeleteEvent;
 			now: number;
 		}) => {
-			activityMonitor.recordActivity();
+			activityMonitor.recordActivity(now);
 			data.files.forEach((file) => {
 				session.fileDeleted(file, now);
 			});
 		},
 		handleFileSystemSync: ({ data, now }: { data: any; now: number }) => {
-			activityMonitor.recordActivity();
+			activityMonitor.recordActivity(now);
 			session.syncFileSystem(now);
 		},
 		handleFileSave: ({
@@ -136,7 +147,7 @@ export const StateManagerConstructor = (
 			data: TextDocument;
 			now: number;
 		}) => {
-			activityMonitor.recordActivity();
+			activityMonitor.recordActivity(now);
 			session.fileSaved(data, now);
 		},
 		handleFileChange: ({
@@ -146,7 +157,7 @@ export const StateManagerConstructor = (
 			data: TextDocumentChangeEvent;
 			now: number;
 		}) => {
-			activityMonitor.recordActivity();
+			activityMonitor.recordActivity(now);
 			session.fileChanged(data.document, now);
 		},
 		handleDebugStart: ({

@@ -1,11 +1,18 @@
-import { EventBrokerConstructor } from './broker.main';
-import { StateManagerConstructor } from '../state/state.manager';
+/** @format */
+
+import { debug, Disposable, LogOutputChannel, window, workspace } from 'vscode';
 import { createVSCListener } from '../../utils/generators/vsc.listener.impl';
-import { workspace, window, debug, Disposable } from 'vscode';
+import { throttle } from '../../utils/throttle';
+import { StateManagerConstructor } from '../state/state.manager';
+import { EventBrokerConstructor } from './broker.main';
+
+//? Event Registry for easy event mapping
 export const initializeBrokerSubscriptions = (
 	manager: ReturnType<typeof StateManagerConstructor>,
-	broker: ReturnType<typeof EventBrokerConstructor>
+	broker: ReturnType<typeof EventBrokerConstructor>,
+	logger: LogOutputChannel
 ) => {
+	logger.debug('Initializing broker subscriptions');
 	let disposables: Disposable[] = [];
 	broker.subscribe('devclock.debug.started', manager!.handleDebugStart);
 	broker.subscribe('devclock.debug.ended', manager!.handleDebugEnd);
@@ -50,14 +57,21 @@ export const initializeBrokerSubscriptions = (
 		createVSCListener(
 			workspace.onDidChangeTextDocument,
 			'devclock.stat.fileChanged',
-			broker.queueEvent
+			broker.queueEvent,
+			{
+				fn: throttle,
+				duration: 10 * 1000,
+			}
 		).disposable
 	);
 	disposables.push(
 		createVSCListener(
 			workspace.onDidSaveTextDocument,
 			'devclock.stat.fileSaved',
-			broker.queueEvent
+			(data, label) => {
+				logger.debug(`VSC listener triggered for ${label}`);
+				broker.queueEvent(data, label);
+			}
 		).disposable
 	);
 	disposables.push(

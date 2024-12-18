@@ -7,7 +7,12 @@ import {
 	window,
 	workspace as ws,
 } from 'vscode';
-import { AppDetails } from '../../../shared/settings';
+import {
+	FileBlacklist,
+	addToBlacklist,
+	AppDetails,
+	isBlacklisted,
+} from '../../../shared/settings';
 import {
 	DevClockSession,
 	DevclockSessionDetails,
@@ -15,6 +20,7 @@ import {
 } from '../../../shared/types/session.s.t';
 
 export const SessionStore = (logger: LogOutputChannel) => {
+	const fileBlacklist = FileBlacklist;
 	let activeSession: DevClockSession = {
 		appName: AppDetails.appName,
 		sessionID: AppDetails.sessionID,
@@ -32,41 +38,8 @@ export const SessionStore = (logger: LogOutputChannel) => {
 			},
 		},
 	};
-	const addToBlacklist = (
-		details: DevclockSessionDetails,
-		fileName: string
-	) => {
-		details.metadata.fileBlacklist[fileName] = details.metadata
-			.fileBlacklist[fileName]
-			? details.metadata.fileBlacklist[fileName] + 1
-			: 1;
-		logger.info(
-			`Error occurred during file event\nBlacklisted ${fileName}`
-		);
-	};
-	const isBlacklisted = (
-		details: DevclockSessionDetails,
-		fileName: string
-	): boolean => {
-		logger.info(`Checking if ${fileName} is blacklisted`);
-		if (details.metadata.fileBlacklist[fileName] > 3) {
-			logger.info(`${fileName} is blacklisted`);
-			return true;
-		}
-		if (fileName.toLowerCase().includes('node_modules')) {
-			logger.info(`${fileName} is blacklisted`);
-			return true;
-		}
-		if (fileName.toLowerCase().includes('untitled')) {
-			logger.info(`${fileName} is blacklisted`);
-			return true;
-		}
-		if (fileName.toLowerCase().includes('://')) {
-			logger.info(`${fileName} is blacklisted`);
-			return true;
-		}
-		return false;
-	};
+
+	//? Immutable Update Helper
 	const updater = (session: DevClockSession) => {
 		activeSession = session;
 	};
@@ -76,7 +49,7 @@ export const SessionStore = (logger: LogOutputChannel) => {
 	): DevclockSessionDetails => {
 		if (
 			details.files[document.fileName] ||
-			isBlacklisted(details, document.fileName)
+			isBlacklisted(document.fileName, logger)
 		) {
 			return details;
 		}
@@ -148,7 +121,7 @@ export const SessionStore = (logger: LogOutputChannel) => {
 		document: TextDocument,
 		now: number
 	): DevclockSessionDetails => {
-		if (isBlacklisted(details, document.fileName)) {
+		if (isBlacklisted(document.fileName, logger)) {
 			return details;
 		}
 		// If file is active return
@@ -216,8 +189,8 @@ export const SessionStore = (logger: LogOutputChannel) => {
 		oldUri: Uri
 	): DevclockSessionDetails => {
 		if (
-			isBlacklisted(details, oldUri.fsPath) ||
-			isBlacklisted(details, newUri.fsPath)
+			isBlacklisted(oldUri.fsPath, logger) ||
+			isBlacklisted(newUri.fsPath, logger)
 		) {
 			return details;
 		}
@@ -246,7 +219,7 @@ export const SessionStore = (logger: LogOutputChannel) => {
 		details: DevclockSessionDetails,
 		uri: Uri
 	): Promise<DevclockSessionDetails> => {
-		if (isBlacklisted(details, uri.fsPath)) {
+		if (isBlacklisted(uri.fsPath, logger)) {
 			return details;
 		}
 		try {
@@ -254,7 +227,7 @@ export const SessionStore = (logger: LogOutputChannel) => {
 			details = createFileStat(details, doc);
 			return details;
 		} catch (error) {
-			addToBlacklist(details, uri.fsPath);
+			addToBlacklist(uri.fsPath, logger);
 			return details;
 		}
 	};
@@ -305,7 +278,7 @@ export const SessionStore = (logger: LogOutputChannel) => {
 			visibleFileNames.push(editor.document.fileName);
 			if (
 				details.metadata.activeFiles[editor.document.fileName] ||
-				isBlacklisted(details, editor.document.fileName)
+				isBlacklisted(editor.document.fileName, logger)
 			) {
 				return;
 			}
@@ -314,7 +287,7 @@ export const SessionStore = (logger: LogOutputChannel) => {
 		Object.entries(details.metadata.activeFiles).forEach(async (file) => {
 			let doc;
 			if (!visibleFileNames.includes(file[0])) {
-				if (isBlacklisted(details, file[0])) {
+				if (isBlacklisted(file[0], logger)) {
 					return;
 				}
 				try {

@@ -1,11 +1,11 @@
-import { ExtensionContext, LogOutputChannel } from 'vscode';
+import { ExtensionContext, OutputChannel } from 'vscode';
 import { DevClockSession } from './shared/types/session.s.t';
 import * as path from 'path';
 import * as fs from 'fs';
 
 export const DataRunnerConstructor = (
 	ctx: ExtensionContext,
-	logger: LogOutputChannel
+	logger: OutputChannel
 ) => {
 	let isInitialized = false;
 	const dbPath = path.join(ctx.globalStorageUri.fsPath, 'devclock.json');
@@ -31,7 +31,7 @@ export const DataRunnerConstructor = (
 			isInitialized = true;
 			return true;
 		} catch (err) {
-			logger.error(`Failed to initialize storage: ${err}`);
+			logger.appendLine(`Failed to initialize storage: ${err}`);
 			return false;
 		}
 	};
@@ -76,10 +76,10 @@ export const DataRunnerConstructor = (
 			}
 
 			await fs.promises.writeFile(dbPath, JSON.stringify(data, null, 2));
-			logger.info(`Saved session: ${session.sessionID}`);
+			logger.appendLine(`Saved session: ${session.sessionID}`);
 			return true;
 		} catch (err) {
-			logger.error(`Failed to save session: ${err}`);
+			logger.appendLine(`Failed to save session: ${err}`);
 			return false;
 		}
 	};
