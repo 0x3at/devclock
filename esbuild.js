@@ -1,56 +1,95 @@
-const esbuild = require("esbuild");
+const esbuild = require('esbuild');
+const path = require('path');
+const fs = require('fs');
 
-const production = process.argv.includes('--production');
-const watch = process.argv.includes('--watch');
+async function build() {
+	const isProduction = process.argv.includes('--production');
+	const isWatch = process.argv.includes('--watch');
+	const outDir = 'dist';
 
-/**
- * @type {import('esbuild').Plugin}
- */
-const esbuildProblemMatcherPlugin = {
-	name: 'esbuild-problem-matcher',
+	// Clean dist directory
+	if (fs.existsSync(outDir)) {
+		fs.rmSync(outDir, { recursive: true });
+	}
+	fs.mkdirSync(outDir);
 
-	setup(build) {
-		build.onStart(() => {
-			console.log('[watch] build started');
-		});
-		build.onEnd((result) => {
-			result.errors.forEach(({ text, location }) => {
-				console.error(`✘ [ERROR] ${text}`);
-				console.error(`    ${location.file}:${location.line}:${location.column}:`);
-			});
-			console.log('[watch] build finished');
-		});
-	},
-};
+	try {
+		// Bundle the extension
+		const buildOptions = {
+			entryPoints: ['src/extension.ts'],
+			bundle: true,
+			outfile: path.join(outDir, 'extension.js'),
+			platform: 'node',
+			target: 'node16',
+			format: 'cjs',
+			sourcemap: !isProduction,
+			minify: isProduction,
+			minifyWhitespace: isProduction,
+			minifyIdentifiers: false,
+			minifySyntax: isProduction,
+			treeShaking: true,
+			metafile: true,
+			external: ['vscode'],
 
-async function main() {
-	const ctx = await esbuild.context({
-		entryPoints: [
-			'src/extension.ts'
-		],
-		bundle: true,
-		format: 'cjs',
-		minify: production,
-		sourcemap: !production,
-		sourcesContent: false,
-		platform: 'node',
-		outfile: 'dist/extension.js',
-		external: ['vscode'],
-		logLevel: 'silent',
-		plugins: [
-			/* add to the end of plugins array */
-			esbuildProblemMatcherPlugin
-		],
-	});
-	if (watch) {
-		await ctx.watch();
-	} else {
-		await ctx.rebuild();
-		await ctx.dispose();
+			define: {
+				'process.env.NODE_ENV': JSON.stringify(
+					isProduction ? 'production' : 'development'
+				),
+			},
+			loader: {
+				'.ts': 'ts',
+			},
+			keepNames: true,
+			legalComments: 'inline',
+		};
+
+		if (isWatch) {
+			const ctx = await esbuild.context(buildOptions);
+			await ctx.watch();
+			console.log('Watching for changes...');
+		} else {
+			const result = await esbuild.build(buildOptions);
+
+			// Create production package.json
+			const pkg = require('./package.json');
+			const distPkg = {
+				name: pkg.name,
+				displayName: pkg.displayName,
+				description: pkg.description,
+				version: pkg.version,
+				publisher: pkg.publisher || 'devclock',
+				engines: pkg.engines,
+				categories: pkg.categories,
+				activationEvents: [
+					...pkg.activationEvents,
+					'onCommand:devclock.execDebug',
+					'onCommand:devclock.showDashboard',
+					'onCommand:devclock.showSessionDetails',
+					'onCommand:devclock.deactivate',
+				],
+				contributes: pkg.contributes,
+				main: './extension.js',
+			};
+
+			fs.writeFileSync(
+				path.join(outDir, 'package.json'),
+				JSON.stringify(distPkg, null, 2)
+			);
+
+			// Copy package.json to dist for debugging
+			if (!isProduction) {
+				fs.copyFileSync(
+					'package.json',
+					path.join(outDir, 'package.original.json')
+				);
+			}
+
+			console.log(`Build complete! Output directory: ${outDir}`);
+		}
+	} catch (error) {
+		console.error('Build failed:', error);
+		process.exit(1);
 	}
 }
 
-main().catch(e => {
-	console.error(e);
-	process.exit(1);
-});
+build();
