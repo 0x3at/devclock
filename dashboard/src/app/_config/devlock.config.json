@@ -1,0 +1,80 @@
+{
+  "default_theme": "mocha",
+  "data_path": "/home/dunder/.config/Code/User/globalStorage/devclock.devclock/devclock.test.json",
+  "theme_list": {
+    "default": {
+      "label": "Default",
+      "opts": [
+        {
+          "label": "Light",
+          "identifier": "light"
+        },
+        {
+          "label": "Dark",
+          "identifier": "dark"
+        }
+      ]
+    },
+    "catppuccin": {
+      "label": "Catppuccin",
+      "opts": [
+        {
+          "label": "Latte",
+          "identifier": "latte"
+        },
+        {
+          "label": "Mocha",
+          "identifier": "mocha"
+        }
+      ]
+    },
+    "tokyo": {
+      "label": "Tokyo",
+      "opts": [
+        {
+          "label": "Tokyo City Light",
+          "identifier": "tokyo-light"
+        },
+        {
+          "label": "Tokyo Night",
+          "identifier": "tokyo-night"
+        }
+      ]
+    },
+    "github": {
+      "label": "Github",
+      "opts": [
+        {
+          "label": "Github Light",
+          "identifier": "git-light"
+        },
+        {
+          "label": "Github Dark",
+          "identifier": "git-dark"
+        }
+      ]
+    },
+    "nightOwl": {
+      "label": "Night Owl",
+      "opts": [
+        {
+          "label": "Night Owl Dark",
+          "identifier": "owl-dark"
+        },
+        {
+          "label": "Night Owl Light",
+          "identifier": "owl-light"
+        }
+      ]
+    },
+    "misc": {
+      "label": "Misc",
+      "opts": [
+        {
+          "label": "Darcula",
+          "identifier": "darcula"
+        }
+      ]
+    }
+  }
+}
