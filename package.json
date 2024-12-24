@@ -33,6 +33,57 @@
 				}
 			]
 		},
+		"configuration": {
+			"title": "DevClock",
+			"properties": {
+				"devclock.config.npmPath": {
+					"type": "string",
+					"default": "npm",
+					"description": "Path to the npm executable."
+				},
+				"devclock.config.debugMode": {
+					"type": "boolean",
+					"default": true,
+					"description": "Debug Debug Debug baby."
+				},
+				"devclock.config.syncTimeScale": {
+					"type": "string",
+					"enum": [
+						"1 minute",
+						"5 minutes",
+						"10 minutes",
+						"30 minutes",
+						"1 hour"
+					],
+					"default": "5 minutes",
+					"description": "Interval for syncing session data to local storage."
+				},
+				"devclock.config.idleThreshold": {
+					"type": "string",
+					"enum": [
+						"15 minutes",
+						"30 minutes",
+						"1 hour"
+					],
+					"default": "15 minutes",
+					"description": "Threshold for transitioning to idle state."
+				},
+				"devclock.interface.showTimer": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show the timer in the status bar."
+				},
+				"devclock.interface.timerAlignment": {
+					"type": "string",
+					"enum": [
+						"Left",
+						"Right"
+					],
+					"default": "Left",
+					"description": "Alignment of the timer in the status bar, if visible."
+				}
+			}
+		},
 		"commands": [
 			{
 				"command": "devclock.execDebug",
@@ -77,5 +128,8 @@
 		"npm-run-all": "^4.1.5",
 		"typescript": "^5.6.3"
 	},
-	"dependencies": {}
+	"dependencies": {
+		"npm-run-script": "^0.0.4",
+		"simple-git": "^3.27.0"
+	}
 }

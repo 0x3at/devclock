@@ -21,16 +21,13 @@ export const AppDetails = {
 	startTime: START_TIME,
 };
 
-export const AppPreferences = {
+export const AppPreferences: Record<string, ReturnType<typeof Preference>> = {
+	npmPath: Preference('config.npmPath', EXTENSION_NAME),
+	debugMode: Preference('config.debugMode', EXTENSION_NAME),
 	showTimer: Preference('interface.showTimer', EXTENSION_NAME),
 	timerAlignment: Preference('interface.timerAlignment', EXTENSION_NAME),
-	debug: Preference('config.debug', EXTENSION_NAME),
-	syncMode: Preference('config.syncMode', EXTENSION_NAME),
-	throttleTime: Preference('config.throttleTime', EXTENSION_NAME),
-	heartbeatThreshold: Preference('config.heartbeatThreshold', EXTENSION_NAME),
-	idleThreshold: Preference('config.idleThreshold', EXTENSION_NAME), //TODO: ADDD TO CONFIG
-	timeScale: Preference('config.timeScale', EXTENSION_NAME), //TODO: ADDD TO CONFIG
-	syncTimescale: Preference('config.syncTimeScale', EXTENSION_NAME),
+	idleThreshold: Preference('config.idleThreshold', EXTENSION_NAME),
+	syncTimeScale: Preference('config.syncTimeScale', EXTENSION_NAME),
 };
 
 export const FileBlacklist: Record<string, number> = {
