@@ -22,6 +22,34 @@ export const Preference = (name: string, extName: string) => {
 			return prefMap().get(name)!;
 		},
 		getInt: () => parseInt(value),
+		getTime: () => {
+			switch (true) {
+				case value === '15 minutes':
+					return 15 * 60000;
+				case value === '30 minutes':
+					return 30 * 60000;
+				case value === '60 minutes':
+					return 60 * 60000;
+				default:
+					return 15 * 60000;
+			}
+		},
+		getTimeScale: () => {
+			switch (true) {
+				case value === '1 minute':
+					return 60;
+				case value === '5 minutes':
+					return 300;
+				case value === '10 minutes':
+					return 600;
+				case value === '30 minutes':
+					return 1800;
+				case value === '60 minutes':
+					return 3600;
+				default:
+					return 300;
+			}
+		},
 		disposable: () => _disposable,
 	};
 };

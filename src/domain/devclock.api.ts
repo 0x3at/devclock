@@ -1,6 +1,12 @@
 /** @format */
 
-import { Disposable, ExtensionContext, LogOutputChannel, window } from 'vscode';
+import {
+	commands,
+	Disposable,
+	ExtensionContext,
+	LogOutputChannel,
+	window,
+} from 'vscode';
 import { StatusBarTimerConstructor } from './timer.statusbar';
 import { initializeBrokerSubscriptions } from './broker/broker.init';
 import { EventBrokerConstructor } from './broker/broker.main';
@@ -49,11 +55,18 @@ export const Devclock = (
 				broker!,
 				logger
 			).forEach((disposable) => disposables.push(disposable));
-			logger.info('Devclock Extension Activated');
 			timeTicker = setInterval(() => {
 				onTick();
 			}, 1000);
 			disposables.push(statusBarTimer!.timer);
+			const forceSync = commands.registerCommand(
+				'devclock.forceSync',
+				() => {
+					stateManager!.forceSync();
+				}
+			);
+			disposables.push(forceSync);
+			logger.info('Devclock Extension Activated');
 			return disposables;
 		},
 	};

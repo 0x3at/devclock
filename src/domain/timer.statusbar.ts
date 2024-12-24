@@ -1,6 +1,7 @@
 import { StatusBarAlignment, window } from 'vscode';
 import { State } from '../shared/enums/state.s.e';
 import { toTimeStamp } from '../utils/time';
+import { AppPreferences } from '../shared/settings';
 
 export const StatusBarTimerConstructor = () => {
 	let icons = new Map<State, string>();
@@ -9,7 +10,9 @@ export const StatusBarTimerConstructor = () => {
 	icons.set(State.idle, `$(stop-circle)`);
 	let timer = window.createStatusBarItem(
 		'devclock.timer',
-		StatusBarAlignment.Left,
+		AppPreferences.timerAlignment.get() === 'Left'
+			? StatusBarAlignment.Left
+			: StatusBarAlignment.Right,
 		100
 	);
 	timer.show();

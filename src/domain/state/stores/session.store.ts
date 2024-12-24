@@ -8,7 +8,6 @@ import {
 	workspace as ws,
 } from 'vscode';
 import {
-	FileBlacklist,
 	addToBlacklist,
 	AppDetails,
 	isBlacklisted,
@@ -20,7 +19,6 @@ import {
 } from '../../../shared/types/session.s.t';
 
 export const SessionStore = (logger: LogOutputChannel) => {
-	const fileBlacklist = FileBlacklist;
 	let activeSession: DevClockSession = {
 		appName: AppDetails.appName,
 		sessionID: AppDetails.sessionID,
@@ -294,9 +292,42 @@ export const SessionStore = (logger: LogOutputChannel) => {
 					doc = await ws.openTextDocument(Uri.parse(file[0]));
 					details = handleFileDeactivationEvent(details, doc, now);
 				} catch (error) {
+					// Log the error
 					logger.warn(
 						`Error occurred during file sync deactivate ${error}`
 					);
+
+					// Clean up file references
+					const filePath = file[0];
+
+					// Remove from active files
+					delete details.metadata.activeFiles[filePath];
+
+					// Remove from files if it exists
+					if (details.files[filePath]) {
+						const fileLanguage = details.files[filePath].language;
+
+						// Clean up language stats if this was the only file of that language
+						if (details.langs[fileLanguage]) {
+							const hasOtherFilesOfSameLanguage = Object.values(
+								details.files
+							).some(
+								(f) =>
+									f.language === fileLanguage &&
+									f.filePath !== filePath
+							);
+
+							if (!hasOtherFilesOfSameLanguage) {
+								delete details.langs[fileLanguage];
+							}
+						}
+
+						// Remove the file entry
+						delete details.files[filePath];
+					}
+
+					// Add to blacklist to prevent future errors
+					addToBlacklist(filePath, logger);
 				}
 			}
 		});

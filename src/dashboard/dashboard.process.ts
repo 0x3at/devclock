@@ -150,8 +150,9 @@ export const DashboardProcessManager = (context: vscode.ExtensionContext) => {
 						);
 						console.log('Updated npm path to:', systemNpmPath);
 					} else {
-						outputCallback!(
-							'NPM Not Found, install NPM or manually set NPM Path in DevClock settings'
+						vscode.window.showErrorMessage(
+							'NPM Not Found, install NPM or manually set NPM Path in DevClock settings',
+							{ modal: true }
 						);
 
 						throw new Error(

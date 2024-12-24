@@ -33,44 +33,33 @@ export async function activate(context: vscode.ExtensionContext) {
 	const showDashboard = vscode.commands.registerCommand(
 		'devclock.showDashboard',
 		async () => {
+			try {
+				vscode.commands.executeCommand('devclock.forceSync');
+			} catch (error) {
+				console.error('Failed to force sync session data:', error);
+			}
 			const dashboard = await DashboardView(context);
 			dashboard.reveal();
-		}
-	);
-	const deactivateDevclock = vscode.commands.registerCommand(
-		'devclock.deactivate',
-		() => {
-			deactivate(context.subscriptions);
-		}
-	);
-	const activateLogger = vscode.commands.registerCommand(
-		'devclock.activateLogger',
-		() => {
-			logger.show();
-		}
-	);
-	const deactivateLogger = vscode.commands.registerCommand(
-		'devclock.deactivateLogger',
-		() => {
-			logger.dispose();
 		}
 	);
 
 	//TODO: Add Extension Flags and launch validation preActivation
 	const logger = vscode.window.createOutputChannel('Devclock', { log: true });
 	const dataRunner = DataRunnerConstructor(ctxStore.get(), logger);
-
-	const devclock = Devclock(ctxStore.get(), logger, dataRunner);
-	const devclockDisposables = devclock.activate();
-	devclockDisposables.forEach((d) => {
-		context.subscriptions.push(d);
-	});
-	context.subscriptions.push(execDebug);
-	context.subscriptions.push(showDashboard);
-	context.subscriptions.push(deactivateDevclock);
-	prefChangeHandlers.map((d) => {
-		context.subscriptions.push(d);
-	});
+	try {
+		const devclock = Devclock(ctxStore.get(), logger, dataRunner);
+		const devclockDisposables = devclock.activate();
+		devclockDisposables.forEach((d) => {
+			context.subscriptions.push(d);
+		});
+		context.subscriptions.push(execDebug);
+		context.subscriptions.push(showDashboard);
+		prefChangeHandlers.map((d) => {
+			context.subscriptions.push(d);
+		});
+	} catch (error) {
+		console.error('Failed to activate Devclock Extension:', error);
+	}
 }
 
 export function deactivate(disposables: vscode.Disposable[]) {

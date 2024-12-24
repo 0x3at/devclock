@@ -26,6 +26,7 @@ export const StateManagerConstructor = (
 	let timeTracker = TimebankStore(logger);
 	let lastState: State = State.active;
 	let tickCounter: number = 0;
+	let forceSync: boolean = false;
 	const transition = (state: State, now: number) => {
 		logger.info(`Transitioning from ${lastState} to ${state}`);
 		if (state === currentState) {
@@ -48,7 +49,7 @@ export const StateManagerConstructor = (
 				transition(State.idle, Date.now());
 				logger.info('Transitioning to idle state');
 			}
-		}, AppPreferences.idleThreshold.getInt() ?? 15 * 60 * 60 * 1000); //15 minutes
+		}, AppPreferences.idleThreshold.getTime());
 
 		return {
 			lastActivity: () => lastActivity,
@@ -68,8 +69,13 @@ export const StateManagerConstructor = (
 			tickCounter++;
 			timeTracker.tick(now);
 			session.syncTime(timeTracker.getBank(), now);
-			if (tickCounter > 300) {
-				//TODO: Update to use App Preferences 'config.syncTimeScale'
+			if (
+				tickCounter > AppPreferences.syncTimeScale.getTimeScale() ||
+				forceSync === true
+			) {
+				if (forceSync === true) {
+					forceSync = false;
+				}
 				tickCounter = 0;
 				session.syncFileSystem(now);
 				dataRunner.saveSession(session.snapshot());
@@ -84,6 +90,7 @@ export const StateManagerConstructor = (
 			timeTracker.initialize(now);
 		},
 		state: () => currentState,
+		forceSync: () => (forceSync = true),
 		time: timeTracker,
 		snapshot: () => session.snapshot(),
 		handleEditorChange: ({

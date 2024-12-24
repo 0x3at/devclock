@@ -2,10 +2,11 @@
 	"name": "devclock",
 	"type": "commonjs",
 	"displayName": "devclock",
-	"description": "",
-	"version": "0.0.4",
+	"publisher": "devclock",
+	"description": "Devclock is a tool for tracking your development time and productivity.",
+	"version": "0.0.9",
 	"engines": {
-		"vscode": "^1.95.0"
+		"vscode": "^1.80.0"
 	},
 	"categories": [
 		"Other"
@@ -53,7 +54,7 @@
 						"5 minutes",
 						"10 minutes",
 						"30 minutes",
-						"1 hour"
+						"60 minutes"
 					],
 					"default": "5 minutes",
 					"description": "Interval for syncing session data to local storage."
@@ -63,7 +64,7 @@
 					"enum": [
 						"15 minutes",
 						"30 minutes",
-						"1 hour"
+						"60 minutes"
 					],
 					"default": "15 minutes",
 					"description": "Threshold for transitioning to idle state."
@@ -86,21 +87,12 @@
 		},
 		"commands": [
 			{
-				"command": "devclock.execDebug",
-				"title": "devclock execDebug"
-			},
-			{
 				"command": "devclock.showDashboard",
-				"title": "Show Devclock Dashboard"
+				"title": "DevClock: Show Dashboard"
 			},
 			{
-				"command": "devclock.showSessionDetails",
-				"title": "Show Session Details",
-				"category": "Devclock"
-			},
-			{
-				"command": "devclock.deactivate",
-				"title": "Deactivate Devclock"
+				"command": "devclock.forceSync",
+				"title": "DevClock: Force Sync Activity Data"
 			}
 		]
 	},
@@ -116,7 +108,7 @@
 		"@types/glob": "^8.1.0",
 		"@types/mocha": "^10.0.9",
 		"@types/node": "20.x",
-		"@types/vscode": "^1.95.0",
+		"@types/vscode": "^1.80.0",
 		"@types/vscode-webview": "^1.57.5",
 		"@typescript-eslint/eslint-plugin": "^8.10.0",
 		"@typescript-eslint/parser": "^8.7.0",
