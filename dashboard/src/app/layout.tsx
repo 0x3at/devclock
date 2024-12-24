@@ -22,7 +22,7 @@ export default async function RootLayout({
 	console.log('Theme State Fetched', themeState);
 	console.log('Theme Identifiers Fetched', themeState.themeIdentifiers);
 	return (
-		<html lang="en">
+		<html suppressHydrationWarning={true} lang="en">
 			<body className="antialiased">
 				<ThemeProvider
 					attribute="class"
@@ -53,9 +53,7 @@ export default async function RootLayout({
 					<AppProvider>
 						<main className="container align-center mx-auto min-w-screen-md rounded-md px-12">
 							<FloatingNavBar themeState={themeState} />
-							<div
-								className="flex min-h-svh flex-1 flex-col"
-								suppressHydrationWarning={true}>
+							<div className="flex min-h-svh flex-1 flex-col">
 								{children}
 							</div>
 						</main>

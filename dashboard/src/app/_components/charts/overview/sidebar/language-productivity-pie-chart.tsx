@@ -13,7 +13,6 @@ import {
 	ChartConfig,
 	ChartContainer,
 	ChartTooltip,
-	ChartTooltipContent,
 } from '@/components/ui/chart';
 import { useAppContext } from '@/contexts/app-context';
 import { getLanguagesProductivity } from '@/lib/actions/session.actions';
@@ -27,21 +26,24 @@ interface LanguageProductivity {
 
 // Define colors for all languages
 const chartConfig: ChartConfig = {
+	// Core languages
 	javascript: { label: 'JavaScript', color: 'hsl(var(--lang-javascript))' },
 	typescript: { label: 'TypeScript', color: 'hsl(var(--lang-typescript))' },
 	python: { label: 'Python', color: 'hsl(var(--lang-python))' },
 	java: { label: 'Java', color: 'hsl(var(--lang-java))' },
+	csharp: { label: 'C#', color: 'hsl(var(--lang-csharp))' },
+	cpp: { label: 'C++', color: 'hsl(var(--lang-cpp))' },
 	ruby: { label: 'Ruby', color: 'hsl(var(--lang-ruby))' },
 	go: { label: 'Go', color: 'hsl(var(--lang-go))' },
 	rust: { label: 'Rust', color: 'hsl(var(--lang-rust))' },
-	cpp: { label: 'C++', color: 'hsl(var(--lang-cpp))' },
-	csharp: { label: 'C#', color: 'hsl(var(--lang-csharp))' },
-	php: { label: 'PHP', color: 'hsl(var(--lang-php))' },
+
+	// Web technologies
 	html: { label: 'HTML', color: 'hsl(var(--lang-html))' },
 	css: { label: 'CSS', color: 'hsl(var(--lang-css))' },
-	json: { label: 'JSON', color: 'hsl(var(--lang-json))' },
-	markdown: { label: 'Markdown', color: 'hsl(var(--lang-markdown))' },
-	yaml: { label: 'YAML', color: 'hsl(var(--lang-yaml))' },
+	scss: { label: 'SCSS', color: 'hsl(var(--lang-scss))' },
+	less: { label: 'Less', color: 'hsl(var(--lang-less))' },
+
+	// React ecosystem
 	typescriptreact: {
 		label: 'TypeScript React',
 		color: 'hsl(var(--lang-typescriptreact))',
@@ -50,13 +52,54 @@ const chartConfig: ChartConfig = {
 		label: 'JavaScript React',
 		color: 'hsl(var(--lang-javascriptreact))',
 	},
-	// Add other languages as needed
+
+	// Other web frameworks
+	vue: { label: 'Vue', color: 'hsl(var(--lang-vue))' },
+	'vue-html': { label: 'Vue HTML', color: 'hsl(var(--lang-vue-html))' },
+	svelte: { label: 'Svelte', color: 'hsl(var(--lang-svelte))' },
+
+	// Data formats
+	json: { label: 'JSON', color: 'hsl(var(--lang-json))' },
+	jsonc: { label: 'JSONC', color: 'hsl(var(--lang-jsonc))' },
+	yaml: { label: 'YAML', color: 'hsl(var(--lang-yaml))' },
+	xml: { label: 'XML', color: 'hsl(var(--lang-xml))' },
+
+	// Shell and scripting
+	shellscript: {
+		label: 'Shell Script',
+		color: 'hsl(var(--lang-shellscript))',
+	},
+	powershell: { label: 'PowerShell', color: 'hsl(var(--lang-powershell))' },
+	bat: { label: 'Batch', color: 'hsl(var(--lang-bat))' },
+
+	// Documentation
+	markdown: { label: 'Markdown', color: 'hsl(var(--lang-markdown))' },
+
+	// Other languages
+	c: { label: 'C', color: 'hsl(var(--lang-c))' },
+	php: { label: 'PHP', color: 'hsl(var(--lang-php))' },
+	swift: { label: 'Swift', color: 'hsl(var(--lang-swift))' },
+	perl: { label: 'Perl', color: 'hsl(var(--lang-perl))' },
+	lua: { label: 'Lua', color: 'hsl(var(--lang-lua))' },
+	r: { label: 'R', color: 'hsl(var(--lang-r))' },
+
+	// Database
+	sql: { label: 'SQL', color: 'hsl(var(--lang-sql))' },
+
+	// Configuration
+	dockerfile: { label: 'Dockerfile', color: 'hsl(var(--lang-dockerfile))' },
+	dockercompose: {
+		label: 'Docker Compose',
+		color: 'hsl(var(--lang-dockercompose))',
+	},
+
+	// Default fallback
+	plaintext: { label: 'Plain Text', color: 'hsl(var(--lang-plaintext))' },
 };
 
 export function LanguageProductivityTreemap() {
 	const { dateRange } = useAppContext();
 	const [data, setData] = React.useState<LanguageProductivity[]>([]);
-	const [totalLines, setTotalLines] = React.useState<number>(0);
 
 	React.useEffect(() => {
 		const fetchData = async () => {
@@ -79,7 +122,6 @@ export function LanguageProductivityTreemap() {
 			}));
 
 			setData(transformedData);
-			setTotalLines(languagesData.totalLines);
 		};
 
 		fetchData();
@@ -110,7 +152,7 @@ export function LanguageProductivityTreemap() {
 										.payload as LanguageProductivity;
 									return (
 										<div className="rounded-lg bg-background p-2 shadow-md border border-border">
-											<p className="font-medium">
+											<p className="font-bold text-foreground">
 												{chartConfig[
 													data.name as keyof typeof chartConfig
 												]?.label || data.name}
