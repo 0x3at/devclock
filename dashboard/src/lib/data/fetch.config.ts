@@ -6,7 +6,7 @@ import { Config, ThemeList } from '@/types/config.s.t';
 // Private helper function to read config
 async function readConfig(): Promise<Config> {
 	const configData = await fs.readFile(
-		'src/app/_config/devlock.config.json',
+		'src/app/_config/devclock.config.json',
 		'utf-8'
 	);
 	return JSON.parse(configData);
