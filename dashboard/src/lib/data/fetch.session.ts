@@ -2,10 +2,14 @@
 import { DevclockSession, SessionsData } from '@/types/session.s.t';
 import { getDataPath } from './fetch.config';
 import * as fs from 'fs/promises';
+import path from 'path';
 async function fetchSessions(): Promise<SessionsData> {
 	const dataPath = await getDataPath();
 	console.log('fetching sessions from', dataPath);
-	const sessions = await fs.readFile(`${dataPath}`, 'utf-8');
+	const sessions = await fs.readFile(
+		`${path.join(dataPath, 'devclock.json')}`,
+		'utf-8'
+	);
 	return JSON.parse(sessions);
 }
 
