@@ -23,7 +23,7 @@ export default async function RootLayout({
 	console.log('Theme Identifiers Fetched', themeState.themeIdentifiers);
 	return (
 		<html lang="en">
-			<body className="antialiased">
+			<body suppressHydrationWarning={true} className="antialiased">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme={

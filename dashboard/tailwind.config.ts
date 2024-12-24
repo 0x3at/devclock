@@ -65,6 +65,7 @@ export default {
 					debug: 'hsl(var(--chart-debug))',
 					idle: 'hsl(var(--chart-idle))',
 				},
+				//* TODO: MAtch these to VSC Language Identifiers
 				lang: {
 					javascript: 'hsl(var(--lang-javascript))',
 					python: 'hsl(var(--lang-python))',
