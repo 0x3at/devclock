@@ -29,11 +29,7 @@ The extension runs silently in the background while you code, collecting metrics
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
+Available DevClock settings:
 
 -   `devclock.config.npmPath`: Path to the npm executable, only needs to be set if the extension cannot find it.
     -   Default: `npm`
@@ -47,6 +43,11 @@ This extension contributes the following settings:
     -   Default: `true`
 -   `devclock.interface.timerAlignment`: Alignment of the timer in the status bar.
     -   Default: `Left`
+
+Available DevClock commands:
+
+-   `DevClock: Show Dashboard`: Show the DevClock Dashboard.
+-   `DevClock: Force Sync`: Force a sync of the current session data to local storage.
 
 ## Release Notes
 
