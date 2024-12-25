@@ -40,7 +40,12 @@ export async function normalizedSessions(
 		const dayKey = sessionDate.toISOString().split('T')[0];
 
 		if (sessionDate >= startDate && sessionDate <= endDate) {
-			const dayData = dailyData.get(dayKey)!;
+			let dayData = dailyData.get(dayKey);
+			// Initialize the array if it doesn't exist
+			if (!dayData) {
+				dayData = [];
+				dailyData.set(dayKey, dayData);
+			}
 			dayData.push(session);
 		}
 	});
