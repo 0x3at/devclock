@@ -55,4 +55,67 @@ Available DevClock commands:
 
 Initial release of DevClock.
 
----
+## Planned Features
+
+-   [ ] Add the ability to add custom themes
+-   [ ] Add the ability to sync/read data to/from a remote server
+-   [ ] Add dashboard views for Activity and Language specific metrics
+-   [ ] Improve the theme switcher to be a theme modal with live preview
+-   [ ] Implement user settings to allow for further customization and control
+
+## Themes
+
+-   [x] Catppuccin
+-   [x] Tokyo City
+-   [x] Github
+-   [x] Owl
+-   [x] Darcula
+
+## Theme Images
+
+<details>
+<summary>Default Light and Dark themes</summary>
+
+![Default Light](./docs/themes/light.png)
+![Default Dark](./docs/themes/dark.png)
+
+</details>
+
+<details>
+<summary>Catppuccin Latte and Mocha themes</summary>
+
+![Catppuccin Latte](./docs/themes/catppuccin-latte.png)
+![Catppuccin Mocha](./docs/themes/catppuccin-mocha.png)
+
+</details>
+
+<details>
+<summary>Tokyo Night and Light themes</summary>
+
+![Tokyo Dark](./docs/themes/tokyo-night.png)
+![Tokyo Light](./docs/themes/tokyocity-light.png)
+
+</details>
+
+<details>
+<summary>Github Dark and Light themes</summary>
+
+![Github Dark](./docs/themes/github-dark.png)
+![Github Light](./docs/themes/github-light.png)
+
+</details>
+
+<details>
+<summary>Owl Dark and Light themes</summary>
+
+![Owl Dark](./docs/themes/owl-dark.png)
+![Owl Light](./docs/themes/owl-light.png)
+
+</details>
+
+<details>
+<summary>Darcula theme</summary>
+
+![Darcula](./docs/themes/darcula.png)
+
+</details>
