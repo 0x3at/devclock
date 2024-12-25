@@ -143,7 +143,8 @@ export function LanguageProductivityTreemap() {
 							dataKey="size"
 							aspectRatio={4 / 3}
 							stroke="hsl(var(--text-foreground))"
-							fill="hsl(var(--text-foreground))">
+							fill="hsl(var(--text-foreground))"
+							className="text-foreground">
 							<ChartTooltip
 								content={({ active, payload }) => {
 									if (!active || !payload?.length)
